@@ -16,6 +16,7 @@ trackers = []
 track_ids = []
 deleted_tracks = []
 
+
 # Inicializar la variable de recuento de personas
 people_count = 0
 
@@ -30,6 +31,7 @@ while True:
     # bbox no lee ningún fotograma
     bbox = hog.detectMultiScale(frame)
     print(bbox)
+
     # Actualizar los objetos detectados con el seguimiento SORT
     detections = np.array([[x, y, x+w, y+h] for x,y,w,h in bbox], dtype=np.float32)
     trackers = tracker.update(detections)
