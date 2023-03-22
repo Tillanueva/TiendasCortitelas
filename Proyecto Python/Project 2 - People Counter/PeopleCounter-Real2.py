@@ -2,6 +2,8 @@ import cv2
 import numpy as np
 from sort import Sort
 
+
+
 # Inicializar el objeto de seguimiento SORT
 tracker = Sort()
 
@@ -24,7 +26,8 @@ while True:
     # Capturar un fotograma de la cámara web
     ret, frame = cap.read()
 
-    # Detectar objetos en el fotograma actual
+    # Detectar objetos en el fotograma actual, develve 0
+    # bbox no lee ningún fotograma
     bbox = hog.detectMultiScale(frame)
     print(bbox)
     # Actualizar los objetos detectados con el seguimiento SORT
