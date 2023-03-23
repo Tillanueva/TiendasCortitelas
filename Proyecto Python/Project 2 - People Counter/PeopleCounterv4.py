@@ -18,13 +18,14 @@ classNames = ["person", "bicycle", "car", "motorbike", "aeroplane", "bus", "trai
               "carrot", "hot dog", "pizza", "donut", "cake", "chair", "sofa", "pottedplant", "bed",
               "diningtable", "toilet", "tvmonitor", "laptop", "mouse", "remote", "keyboard", "cell phone",
               "microwave", "oven", "toaster", "sink", "refrigerator", "book", "clock", "vase", "scissors",
-              "teddy bear", "hair drier", "toothbrush"
-              ]
+              "teddy bear", "hair drier", "toothbrush" ]
+
+
+conteo = []
 prev_frame_time = 0
 new_frame_time = 0
 count = 0
 
-conteo = []
 limitsUp = [103, 161, 296, 161]
 trackers = Sort(max_age=20, min_hits=3, iou_threshold=0.3)
 
@@ -82,7 +83,7 @@ while True:
         cx, cy = x1 + w // 2, y1 + h // 2
         cv2.circle(frame, (cx, cy), 5, (255, 0, 255), cv2.FILLED)
 
-        # si la persona pasa la linea límite se suma al contador  
+        # si la persona pasa la linea límite se suma al contador
         if limitsUp[0] < cx < limitsUp[2] and limitsUp[1] - 15 < cy < limitsUp[1] + 15:
             if conteo.count(id) == 0:
                 conteo.append(id)
@@ -90,8 +91,8 @@ while True:
 
     cv2.putText(frame, str(len(conteo)), (929, 345), cv2.FONT_HERSHEY_PLAIN, 5, (139, 195, 75), 7)
 
-cv2.imshow("Image", frame)
-cv2.waitKey(10)
+    cv2.imshow("Image", frame)
+    cv2.waitKey(10)
 
 
 
