@@ -4,11 +4,17 @@ import cvzone
 import math
 from sort import *
 
+# inicializar la cámara web
 cap = cv2.VideoCapture(0)
 
+# Medidas de la ventana de la cámara
+cap.set(3, 1280)
+cap.set(4, 720)
+
+# Cargar el modelo de yolo que identificará los objetos
 model = YOLO("../Yolo-Weights/yolov8n.pt")
 
-
+# Lista con nombres de distintos objetos que reconoce yolo
 classNames = ["person", "bicycle", "car", "motorbike", "aeroplane", "bus", "train", "truck", "boat",
               "traffic light", "fire hydrant", "stop sign", "parking meter", "bench", "bird", "cat",
               "dog", "horse", "sheep", "cow", "elephant", "bear", "zebra", "giraffe", "backpack", "umbrella",
@@ -18,23 +24,28 @@ classNames = ["person", "bicycle", "car", "motorbike", "aeroplane", "bus", "trai
               "carrot", "hot dog", "pizza", "donut", "cake", "chair", "sofa", "pottedplant", "bed",
               "diningtable", "toilet", "tvmonitor", "laptop", "mouse", "remote", "keyboard", "cell phone",
               "microwave", "oven", "toaster", "sink", "refrigerator", "book", "clock", "vase", "scissors",
-              "teddy bear", "hair drier", "toothbrush" ]
+              "teddy bear", "hair drier", "toothbrush"]
 
 
+# inicializando las variables de conteo
 conteo = []
-prev_frame_time = 0
-new_frame_time = 0
 count = 0
 
-limitsUp = [103, 161, 296, 161]
+# Coordenadas límites para poder contar a la persona
+limitsUp = [ 0, 500, 1280, 500]
+
+# variable de seguimiento de objetos
 trackers = Sort(max_age=20, min_hits=3, iou_threshold=0.3)
 
 while True:
+    # Capturar los fotogramas de la cámara web
     ret, frame = cap.read()
-    # La region que captura
-    # imgRegion  = cv2.bitwise_and(img)
 
-    # Captura el frame que devuelve la camara
+    # imagen de conteo y coordenadas
+    imgGraphics = cv2.imread("graphics.png", cv2.IMREAD_UNCHANGED)
+    frame = cvzone.overlayPNG(frame, imgGraphics, (730, 30))
+
+    # captura el modelo del frame que capturó la cámara web y la lee en tiempo real
     results = model(frame, stream=True)
 
     detections = np.empty((0, 5))
@@ -49,16 +60,16 @@ while True:
             x1, y1, x2, y2 = box.xyxy[0]
             x1, y1, x2, y2 = int(x1), int(y1), int(x2), int(y2)
             w, h = x2 - x1, y2 - y1
+
+            # la variable cls captura los distintos objetos que se encuentran alrederod
             conf = math.ceil((box.conf[0]*100)) / 100
             cls = int(box.cls[0])
+            print(cls)
 
-            # captura los nombres de las clases
-            currentClass = classNames[cls]
+            # Si el objeto es una persona, dibuja un recuadro alrededor
+            if classNames[cls] == "person" and conf > 0.3:
 
-            # compara los nombres de las clases con el objeto capturado
-            # si objeto capturado = persona dibuja un recuadro al rededor
-            if currentClass == "person" and conf > 0.3:
-                # cornerRect dibuja el cuadro con los parámetros
+                # cornerRect dibuja el cuadro con los parámetros anteriores
                 cvzone.cornerRect(frame, (x1, y1, w, h))
 
                 # Coloca el nombre del objetos
@@ -81,16 +92,18 @@ while True:
         w, h = x2 - x1, y2 - y1
 
         cx, cy = x1 + w // 2, y1 + h // 2
+
+        # Dibuja un punto central en el recuadro de la persona
         cv2.circle(frame, (cx, cy), 5, (255, 0, 255), cv2.FILLED)
 
         # si la persona pasa la linea límite se suma al contador
         if limitsUp[0] < cx < limitsUp[2] and limitsUp[1] - 15 < cy < limitsUp[1] + 15:
             if conteo.count(id) == 0:
                 conteo.append(id)
-                cv2.line(frame, (limitsUp[0], limitsUp[1]), (limitsUp[2], limitsUp[3]), (0, 255, 0), 5)
+                cv2.line(frame, (limitsUp[3], limitsUp[2]), (limitsUp[1], limitsUp[0]), (0, 255, 0), 5)
 
-    cv2.putText(frame, str(len(conteo)), (929, 345), cv2.FONT_HERSHEY_PLAIN, 5, (139, 195, 75), 7)
-
+    cv2.putText(frame,str(len(conteo)),(909,115),cv2.FONT_HERSHEY_PLAIN,5,(139,195,75),7)
+    print(conteo)
     cv2.imshow("Image", frame)
     cv2.waitKey(10)
 
