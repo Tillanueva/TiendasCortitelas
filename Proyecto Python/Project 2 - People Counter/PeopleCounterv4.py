@@ -29,15 +29,19 @@ classNames = ["person", "bicycle", "car", "motorbike", "aeroplane", "bus", "trai
 
 # inicializando las variables de conteo
 conteo = []
-count = 0
+
 
 # Coordenadas límites para poder contar a la persona
-limitsUp = [ 0, 500, 1280, 500]
+limitsUp = [ 0, 500, 1280, 500]                         # Entrada
+limitsDown = []                                         # salida
+
 
 # variable de seguimiento de objetos
 trackers = Sort(max_age=20, min_hits=3, iou_threshold=0.3)
 
+# Mientras reciba valores
 while True:
+
     # Capturar los fotogramas de la cámara web
     ret, frame = cap.read()
 
@@ -53,9 +57,10 @@ while True:
     for r in results:
 
         # Dibujar recuadro del objeto
-
         boxes = r.boxes
+
         for box in boxes:
+
             # parametros del recuadro
             x1, y1, x2, y2 = box.xyxy[0]
             x1, y1, x2, y2 = int(x1), int(y1), int(x2), int(y2)
