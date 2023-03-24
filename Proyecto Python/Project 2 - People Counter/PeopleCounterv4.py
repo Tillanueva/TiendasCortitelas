@@ -29,11 +29,12 @@ classNames = ["person", "bicycle", "car", "motorbike", "aeroplane", "bus", "trai
 
 # inicializando las variables de conteo
 conteo = []
+salidas = []
 
 
 # Coordenadas límites para poder contar a la persona
-limitsUp = [ 0, 500, 1280, 500]                         # Entrada
-limitsDown = []                                         # salida
+limitsUp = [0, 500, 1280, 500]               # Entrada
+limitsDown = [0, 700, 1280, 700]             # salida
 
 
 # variable de seguimiento de objetos
@@ -86,7 +87,8 @@ while True:
     resultsTracker = trackers.update(detections)
 
     # Dibuja una linea límite
-    cv2.line(frame, (limitsUp[0], limitsUp[1]),(limitsUp[2],limitsUp[3]), (0, 0, 255), 5)
+    cv2.line(frame, (limitsUp[0], limitsUp[1]), (limitsUp[2], limitsUp[3]), (0, 0, 255), 5)
+    cv2.line(frame, (limitsDown[0], limitsDown[1]), (limitsDown[2], limitsDown[3]), (0, 0, 255), 5)
 
     for results in resultsTracker:
         # Parametros para el contador
@@ -107,7 +109,14 @@ while True:
                 conteo.append(id)
                 cv2.line(frame, (limitsUp[3], limitsUp[2]), (limitsUp[1], limitsUp[0]), (0, 255, 0), 5)
 
-    cv2.putText(frame,str(len(conteo)),(909,115),cv2.FONT_HERSHEY_PLAIN,5,(139,195,75),7)
+        if limitsDown[0] < cx < limitsDown[2] and limitsDown[1] - 15 < cy < limitsDown[1] + 15:
+            if salidas.count(id) == 0:
+                salidas.append(id)
+                cv2.line(frame, (limitsDown[0], limitsDown[1]), (limitsDown[2], limitsDown[3]), (0, 255, 0), 5)
+
+    cv2.putText(frame, str(len(conteo)), (895, 115), cv2.FONT_HERSHEY_PLAIN, 5, (139, 195, 75), 7)
+    cv2.putText(frame, str(len(salidas)), (1150, 115), cv2.FONT_HERSHEY_PLAIN, 5, (50, 50, 230), 7)
+
     print(conteo)
     cv2.imshow("Image", frame)
     cv2.waitKey(10)
