@@ -33,9 +33,9 @@ salidas = []
 
 
 # Coordenadas límites para poder contar a la persona
-limitsUp = [0, 500, 1280, 500]               # Entrada
-limitsDown = [0, 700, 1280, 700]             # salida
-
+limitsUp = [0, 500, 1280, 500]                     # Entrada
+limitsDown = [0, 450, 1280, 450]                   # salida
+# 0 = x1, 500 = y1, 1280 = x2
 
 # variable de seguimiento de objetos
 trackers = Sort(max_age=20, min_hits=3, iou_threshold=0.3)
@@ -118,6 +118,7 @@ while True:
     cv2.putText(frame, str(len(salidas)), (1150, 115), cv2.FONT_HERSHEY_PLAIN, 5, (50, 50, 230), 7)
 
     print(conteo)
+    print(salidas)
     cv2.imshow("Image", frame)
     cv2.waitKey(10)
 
