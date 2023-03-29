@@ -1,8 +1,9 @@
-from ultralytics import YOLO
 import cv2
 import cvzone
 import math
+from ultralytics import YOLO
 from sort import *
+from datetime import *
 
 # inicializar la cámara web
 cap = cv2.VideoCapture(0)
@@ -10,6 +11,9 @@ cap = cv2.VideoCapture(0)
 # Medidas de la ventana de la cámara
 cap.set(3, 1280)
 cap.set(4, 720)
+
+# Capturar la fecha actual
+today = date.today()
 
 # Cargar el modelo de yolo que identificará los objetos
 model = YOLO("../Yolo-Weights/yolov8n.pt")
@@ -33,9 +37,8 @@ salidas = []
 
 
 # Coordenadas límites para poder contar a la persona
-limitsUp = [0, 500, 1280, 500]                     # Entrada
-limitsDown = [0, 450, 1280, 450]                   # salida
-# 0 = x1, 500 = y1, 1280 = x2
+limitsUp = [0, 500, 1280, 500]               # Entrada
+limitsDown = [0, 700, 1280, 700]             # salida
 
 # variable de seguimiento de objetos
 trackers = Sort(max_age=20, min_hits=3, iou_threshold=0.3)
@@ -49,6 +52,7 @@ while True:
     # imagen de conteo y coordenadas
     imgGraphics = cv2.imread("graphics.png", cv2.IMREAD_UNCHANGED)
     frame = cvzone.overlayPNG(frame, imgGraphics, (730, 30))
+
 
     # captura el modelo del frame que capturó la cámara web y la lee en tiempo real
     results = model(frame, stream=True)
@@ -114,14 +118,15 @@ while True:
                 salidas.append(id)
                 cv2.line(frame, (limitsDown[0], limitsDown[1]), (limitsDown[2], limitsDown[3]), (0, 255, 0), 5)
 
+    # Imprime el conteo de personas
     cv2.putText(frame, str(len(conteo)), (895, 115), cv2.FONT_HERSHEY_PLAIN, 5, (139, 195, 75), 7)
     cv2.putText(frame, str(len(salidas)), (1150, 115), cv2.FONT_HERSHEY_PLAIN, 5, (50, 50, 230), 7)
 
+    # Imprime la fecha actual
+    cv2.putText(frame, str(today), (895, 50), cv2.FONT_HERSHEY_PLAIN, 5, (139, 195, 20), thickness=1)
+
     print(conteo)
-    print(salidas)
+
     cv2.imshow("Image", frame)
-    cv2.waitKey(10)
-
-
-
+    cv2.waitKey(1)
 
