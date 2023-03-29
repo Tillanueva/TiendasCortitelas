@@ -1,16 +1,13 @@
-import tkinter as tk
-from functools import partial
-from tkinter import messagebox, ttk
+import cv2
+import numpy as np
+import matplotlib.pyplot as plt
 
-def saludar(ventana):
-    messagebox.showinfo(message="¡Hola, mundo!", title="Saludo")
-    ventana.title("Nuevo título")
+whiteblankimage = 255 * np.ones(shape=[512, 512, 3], dtype=np.uint8)
 
-root = tk.Tk()
-root.config(width=300, height=200)
-root.title("Botón en Tk")
 
-boton = ttk.Button(text="¡Hola, mundo!", command=partial(saludar, root))
-boton.place(x=50, y=50)
+cv2.line(whiteblankimage, pt1=(100,300), pt2=(400,300), color=(0,0,255), thickness=10)
 
-root.mainloop()
+
+plt.imshow(whiteblankimage)
+
+plt.show()
