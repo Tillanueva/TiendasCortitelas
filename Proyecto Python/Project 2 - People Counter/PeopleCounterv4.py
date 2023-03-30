@@ -1,10 +1,12 @@
 import cv2
 import cvzone
 import math
+import pickle
 from ultralytics import YOLO
 from sort import *
 from datetime import *
 from sqlitedict import SqliteDict
+
 
 # inicializar la cámara web
 cap = cv2.VideoCapture(0)
@@ -90,9 +92,9 @@ while True:
 
     resultsTracker = trackers.update(detections)
 
-    # Dibuja una linea límite
-    # cv2.line(frame, (limitsUp[0], limitsUp[1]), (limitsUp[2], limitsUp[3]), (0, 0, 255), 5)
-    # cv2.line(frame, (limitsDown[0], limitsDown[1]), (limitsDown[2], limitsDown[3]), (0, 0, 255), 5)
+    # Dibuja una linea límite (donde está ubicada la linea del contador)
+    cv2.line(frame, (limitsUp[0], limitsUp[1]), (limitsUp[2], limitsUp[3]), (0, 0, 255), 5)
+    cv2.line(frame, (limitsDown[0], limitsDown[1]), (limitsDown[2], limitsDown[3]), (0, 0, 255), 5)
 
     for results in resultsTracker:
         # Parametros para el contador
