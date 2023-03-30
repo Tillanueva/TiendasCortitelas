@@ -53,7 +53,6 @@ while True:
     imgGraphics = cv2.imread("graphics.png", cv2.IMREAD_UNCHANGED)
     frame = cvzone.overlayPNG(frame, imgGraphics, (730, 30))
 
-
     # captura el modelo del frame que capturó la cámara web y la lee en tiempo real
     results = model(frame, stream=True)
 
@@ -91,8 +90,8 @@ while True:
     resultsTracker = trackers.update(detections)
 
     # Dibuja una linea límite
-    cv2.line(frame, (limitsUp[0], limitsUp[1]), (limitsUp[2], limitsUp[3]), (0, 0, 255), 5)
-    cv2.line(frame, (limitsDown[0], limitsDown[1]), (limitsDown[2], limitsDown[3]), (0, 0, 255), 5)
+    # cv2.line(frame, (limitsUp[0], limitsUp[1]), (limitsUp[2], limitsUp[3]), (0, 0, 255), 5)
+    # v2.line(frame, (limitsDown[0], limitsDown[1]), (limitsDown[2], limitsDown[3]), (0, 0, 255), 5)
 
     for results in resultsTracker:
         # Parametros para el contador
@@ -123,7 +122,8 @@ while True:
     cv2.putText(frame, str(len(salidas)), (1150, 115), cv2.FONT_HERSHEY_PLAIN, 5, (50, 50, 230), 7)
 
     # Imprime la fecha actual
-    cv2.putText(frame, str(today), (895, 50), cv2.FONT_HERSHEY_PLAIN, 5, (139, 195, 20), thickness=1)
+
+    cv2.putText(frame, str(today), (15, 50), cv2.FONT_HERSHEY_SIMPLEX, 2, (139, 195, 20), thickness=2)
 
     print(conteo)
 
