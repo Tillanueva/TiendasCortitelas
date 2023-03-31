@@ -1,11 +1,9 @@
 import cv2
 import cvzone
 import math
-import pickle
 from ultralytics import YOLO
 from sort import *
 from datetime import *
-from sqlitedict import SqliteDict
 
 
 # inicializar la cámara web
@@ -38,8 +36,11 @@ classNames = ["person", "bicycle", "car", "motorbike", "aeroplane", "bus", "trai
 conteo = []
 salidas = []
 
+# limites Horizontales
+# limitsUp = [10, 0, 10, 720]                   # Entrada
+# limitsDown = [1270, 0, 1270, 720]             # salida
 
-# Coordenadas límites para poder contar a la persona
+# Coordenadas límites verticales para poder contar a la persona
 limitsUp = [0, 500, 1280, 500]               # Entrada
 limitsDown = [0, 700, 1280, 700]             # salida
 
@@ -93,8 +94,8 @@ while True:
     resultsTracker = trackers.update(detections)
 
     # Dibuja una linea límite (donde está ubicada la linea del contador)
-    cv2.line(frame, (limitsUp[0], limitsUp[1]), (limitsUp[2], limitsUp[3]), (0, 0, 255), 5)
-    cv2.line(frame, (limitsDown[0], limitsDown[1]), (limitsDown[2], limitsDown[3]), (0, 0, 255), 5)
+    # cv2.line(frame, (limitsUp[0], limitsUp[1]), (limitsUp[2], limitsUp[3]), (0, 0, 255), 5)
+    # cv2.line(frame, (limitsDown[0], limitsDown[1]), (limitsDown[2], limitsDown[3]), (0, 0, 255), 5)
 
     for results in resultsTracker:
         # Parametros para el contador
@@ -126,7 +127,7 @@ while True:
 
     # Imprime la fecha actual
 
-    cv2.putText(frame, str(today), (15, 50), cv2.FONT_HERSHEY_SIMPLEX, 2, (139, 195, 20), thickness=2)
+    cv2.putText(frame, str(today), (15, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (139, 195, 20), thickness=3)
 
     print(conteo)
     print(salidas)
