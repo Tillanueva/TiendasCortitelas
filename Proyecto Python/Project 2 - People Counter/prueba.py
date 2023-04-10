@@ -2,7 +2,6 @@ import cv2
 import imutils
 import math
 import cvzone
-import numpy as np
 from ultralytics import YOLO
 from tkinter import *
 from PIL import Image, ImageTk
