@@ -28,8 +28,8 @@ conteo = []
 salidas = []
 
 # Coordenadas límites verticales para poder contar a la persona
-limitsUp = [0, 500, 1280, 500]               # Entrada
-limitsDown = [0, 700, 1280, 700]             # salida
+limitsUp = [0, 300, 1280, 300]               # Entrada
+limitsDown = [0, 400, 1280, 400]             # salida
 
 # variable de seguimiento de objetos
 trackers = Sort(max_age=20, min_hits=3, iou_threshold=0.3)
@@ -124,7 +124,7 @@ def visualizar():
             print(conteo)
             print(salidas)
 
-            frame = imutils.resize(frame, width=840)
+            frame = imutils.resize(frame)
 
             # Convertimos el video
             im = Image.fromarray(frame)
@@ -143,6 +143,9 @@ def iniciar():
     global cap
     # Inicialización de cámara
     cap = cv2.VideoCapture(0)
+    cap.set(3, 1200)
+    cap.set(4, 520)
+
     visualizar()
 
 
@@ -158,15 +161,15 @@ def times():
 
 # VARIABLES
 cap = None
+rgb = 1
 hsv = 0
 gray = 0
-rgb = 1
-detcolor = 0
+
 
 # INTERFAZ
 pantalla = Tk()
 pantalla.title("Tiendas Cortitelas | People Counter")
-pantalla.geometry("1280x720") # Dimensión de la ventana
+pantalla.geometry("1280x720")  # Dimensión de la ventana
 
 # Fondo
 imagenF = PhotoImage(file="Fondo.png")
@@ -180,7 +183,10 @@ lblFecha = Label(pantalla)
 lblFecha.place(x=10, y=10)
 times()
 
-
+# CONTEO
+imgConteo = PhotoImage(file="graphics.png")
+lblConteo = Label(image=imgConteo)
+lblConteo.place(x=1000, y=50)
 # BOTONES
 # Iniciar
 imgInicio = PhotoImage(file = "Inicio.png")
@@ -195,7 +201,7 @@ final.place(x=1000, y=600)
 
 # Video
 lblVideo = Label(pantalla)
-lblVideo.place(x=320, y=50)
+lblVideo.place(x=165, y=50)
 
 lblVideo2 = Label(pantalla)
 lblVideo2.place(x=470, y=500)

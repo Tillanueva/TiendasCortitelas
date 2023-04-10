@@ -79,8 +79,7 @@ while True:
     ret, frame = cap.read()
 
     # imagen de conteo y coordenadas
-    imgGraphics = cv2.imread("graphics.png", cv2.IMREAD_UNCHANGED)
-    frame = cvzone.overlayPNG(frame, imgGraphics, (730, 30))
+
 
     # captura el modelo del frame que capturó la cámara web y la lee en tiempo real
     results = model(frame, stream=True)
