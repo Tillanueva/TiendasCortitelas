@@ -1,9 +1,34 @@
+import tkinter
 import cv2
 import cvzone
 import math
+import openpyxl
 from ultralytics import YOLO
 from sort import *
 from datetime import *
+
+# Raiz del botón guardar
+raiz = tkinter.Tk()
+raiz.geometry("640x580")
+raiz.title("Guardar")
+
+# Función para guardar el contador
+def guardar_contadores(contadores):
+    # Abrir el archivo de excel existente o crear uno
+    try:
+        libro = openpyxl.load_workbook("contadores.xlsx")
+        hoja = libro.active
+    except FileNotFoundError:
+        libro = openpyxl.workbook()
+        hoja = libro.active
+        hoja.title = "Contadores"
+
+    # Escribir los datos en la siguiente fila vacía
+    fila_vacia = hoja.max_row + 1
+    for i, contador in enumerate(contadores):
+        hoja.cell(row=fila_vacia, column=i+1, value=contador)
+
+    libro.save("cortitelas.xlsx")
 
 
 # inicializar la cámara web
@@ -57,6 +82,8 @@ while True:
     imgGraphics = cv2.imread("graphics.png", cv2.IMREAD_UNCHANGED)
     frame = cvzone.overlayPNG(frame, imgGraphics, (730, 30))
 
+    # Botón Guardar
+    btnGuardar = frame
     # captura el modelo del frame que capturó la cámara web y la lee en tiempo real
     results = model(frame, stream=True)
 
@@ -93,7 +120,7 @@ while True:
 
     resultsTracker = trackers.update(detections)
 
-    # Dibuja una linea límite (donde está ubicada la linea del contador)
+    # Dibuja una linea límite (donde está ubicada la linea del contador) (Prueba)
     # cv2.line(frame, (limitsUp[0], limitsUp[1]), (limitsUp[2], limitsUp[3]), (0, 0, 255), 5)
     # cv2.line(frame, (limitsDown[0], limitsDown[1]), (limitsDown[2], limitsDown[3]), (0, 0, 255), 5)
 
@@ -110,12 +137,12 @@ while True:
         # Dibuja un punto central en el recuadro de la persona
         cv2.circle(frame, (cx, cy), 5, (255, 0, 255), cv2.FILLED)
 
-        # si la persona pasa la linea límite se suma al contador
+        # si la persona pasa la linea límite se suma al contador de personas que entran
         if limitsUp[0] < cx < limitsUp[2] and limitsUp[1] - 15 < cy < limitsUp[1] + 15:
             if conteo.count(id) == 0:
                 conteo.append(id)
                 cv2.line(frame, (limitsUp[3], limitsUp[2]), (limitsUp[1], limitsUp[0]), (0, 255, 0), 5)
-
+        # si la persona pasa la linea límite se suma al contador de personas que salen
         if limitsDown[0] < cx < limitsDown[2] and limitsDown[1] - 15 < cy < limitsDown[1] + 15:
             if salidas.count(id) == 0:
                 salidas.append(id)
@@ -131,6 +158,7 @@ while True:
 
     print(conteo)
     print(salidas)
+
 
     cv2.imshow("Image", frame)
     cv2.waitKey(1)
