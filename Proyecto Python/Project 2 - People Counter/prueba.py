@@ -40,6 +40,19 @@ def visualizar():
         ret, frame = cap.read()
 
         if ret == True:
+
+            if (rgb == 1 and hsv == 0 and gray == 0):
+                # Color BGR
+                frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+
+            elif rgb == 0 and hsv == 1 and gray == 0:
+                # Color HSV
+                frame = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+
+            elif (rgb == 0 and hsv == 0 and gray == 1):
+                # Color GRAY
+                frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+
             # captura el modelo del frame que capturó la cámara web y la lee en tiempo real
             results = model(frame, stream=True)
 
@@ -108,15 +121,10 @@ def visualizar():
             cv2.putText(frame, str(len(conteo)), (895, 115), cv2.FONT_HERSHEY_PLAIN, 5, (139, 195, 75), 7)
             cv2.putText(frame, str(len(salidas)), (1150, 115), cv2.FONT_HERSHEY_PLAIN, 5, (50, 50, 230), 7)
 
-            # Imprime la fecha actual
-            today = date.today()
-            cv2.putText(frame, str(today), (15, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (139, 195, 20), thickness=3)
-
             print(conteo)
             print(salidas)
 
-
-            frame = imutils.resize(frame, width=640)
+            frame = imutils.resize(frame, width=840)
 
             # Convertimos el video
             im = Image.fromarray(frame)
@@ -143,9 +151,17 @@ def finalizar():
     cv2.DestroyAllWindows()
     print("FIN")
 
+def times():
+    time = datetime.today()
+    current_date = time.strftime("%m/%d/%Y")
+    lblFecha.config(text=current_date)
 
 # VARIABLES
 cap = None
+hsv = 0
+gray = 0
+rgb = 1
+detcolor = 0
 
 # INTERFAZ
 pantalla = Tk()
@@ -154,27 +170,32 @@ pantalla.geometry("1280x720") # Dimensión de la ventana
 
 # Fondo
 imagenF = PhotoImage(file="Fondo.png")
-background = Label(image = imagenF, text = "Fondo")
+background = Label(image=imagenF, text="Fondo")
 background.place(x=0, y=0, relwidth= 1, relheight=1)
 
 texto1 = Label(pantalla, text="VIDEO EN TIEMPO REAL: ")
 texto1.place(x = 580, y = 10)
 
+lblFecha = Label(pantalla)
+lblFecha.place(x=10, y=10)
+times()
+
+
 # BOTONES
 # Iniciar
 imgInicio = PhotoImage(file = "Inicio.png")
 inicio = Button(pantalla, text="Iniciar", image=imgInicio, height="40", width="200", command=iniciar)
-inicio.place(x=100, y=500)
+inicio.place(x=90, y=600)
 
 #Finalizar video
-imgFinalizar = PhotoImage(file = "Finalizar.png")
-final = Button(pantalla, text="Finalizar", image=imgInicio, height="40", width="200", command=finalizar)
-final.place(x=980, y=500)
+imgFinalizar = PhotoImage(file="Finalizar.png")
+final = Button(pantalla, text="Finalizar", image=imgFinalizar, height="40", width="200", command=finalizar)
+final.place(x=1000, y=600)
 
 
 # Video
 lblVideo = Label(pantalla)
-lblVideo.place(x = 320, y=50)
+lblVideo.place(x=320, y=50)
 
 lblVideo2 = Label(pantalla)
 lblVideo2.place(x=470, y=500)
