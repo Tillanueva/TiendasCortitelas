@@ -186,14 +186,17 @@ times()
 # CONTEO
 imgConteo = PhotoImage(file="graphics.png")
 lblConteo = Label(image=imgConteo)
+lblConteo.config(height="40", width="200")
 lblConteo.place(x=1000, y=50)
+
+
 # BOTONES
 # Iniciar
 imgInicio = PhotoImage(file = "Inicio.png")
 inicio = Button(pantalla, text="Iniciar", image=imgInicio, height="40", width="200", command=iniciar)
 inicio.place(x=90, y=600)
 
-#Finalizar video
+# Finalizar video
 imgFinalizar = PhotoImage(file="Finalizar.png")
 final = Button(pantalla, text="Finalizar", image=imgFinalizar, height="40", width="200", command=finalizar)
 final.place(x=1000, y=600)
