@@ -78,9 +78,6 @@ while True:
     # Capturar los fotogramas de la cámara web
     ret, frame = cap.read()
 
-    # imagen de conteo y coordenadas
-
-
     # captura el modelo del frame que capturó la cámara web y la lee en tiempo real
     results = model(frame, stream=True)
 
