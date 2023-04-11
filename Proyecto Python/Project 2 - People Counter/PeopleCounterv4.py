@@ -153,7 +153,6 @@ while True:
     print(conteo)
     print(salidas)
 
-
     cv2.imshow("Image", frame)
     cv2.waitKey(1)
 
