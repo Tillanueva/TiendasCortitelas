@@ -145,7 +145,6 @@ def iniciar():
     cap.set(4, 520)
 
     visualizar()
-    print(visualizar())
 
 
 def finalizar():
@@ -155,8 +154,8 @@ def finalizar():
 
 
 def times():
-    date = datetime.today()  # Capruta date actual
-    current_date = date.strftime("%m/%d/%Y")
+    fechaC = datetime.today()  # Capruta date actual
+    current_date = fechaC.strftime("%m/%d/%Y")
     lblFecha.config(text=current_date)
 
 
@@ -198,5 +197,7 @@ final.place(x=1000, y=610)
 # Video
 lblVideo = Label(pantalla)
 lblVideo.place(x=165, y=60)
+Counter = str(len(visualizar()))
+print(Counter)
 
 pantalla.mainloop()
