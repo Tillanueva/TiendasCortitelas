@@ -6,6 +6,7 @@ from tkinter import *
 from PIL import Image, ImageTk
 from sort import *
 from datetime import *
+from conexion import cn
 
 
 # inicializar el Modelo de YOLOY
@@ -139,7 +140,6 @@ def visualizar():
 def iniciar():
     global cap
     # Inicialización de cámara
-    print("Iniciando")
     cap = cv2.VideoCapture(0)
     cap.set(3, 1200)
     cap.set(4, 520)
@@ -151,7 +151,7 @@ def finalizar():
     cv2.destroyAllWindows()
     print("FIN")
 
-"""
+
 def guardar():
     try:
         with cn.cursor() as cursor:
@@ -159,7 +159,7 @@ def guardar():
             cursor.execute(consulta, visualizar())
     except Exception as e:
         print("Ocurrió un error al insertar: ", e)
-"""
+
 
 
 def times():
