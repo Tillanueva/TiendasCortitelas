@@ -6,10 +6,10 @@ from tkinter import *
 from PIL import Image, ImageTk
 from sort import *
 from datetime import *
-import pandas as pd
 import pyodbc
 
 
+# Conexion a la base de datos
 def conexion():
     server = "DESKTOP-O6UFVI0"
     bd = 'PeopleCounter'
@@ -145,7 +145,6 @@ def visualizar():
             lblConteo.place(x=1000, y=10)
             lblSalidas = Label(pantalla, text="Salida de personas: " + cSalida)
             lblSalidas.place(x=1000, y=40)
-            print(visualizar())
 
             return count, cSalida
 
@@ -213,9 +212,12 @@ imgFinalizar = PhotoImage(file="Finalizar.png")
 final = Button(pantalla, text="Finalizar", image=imgFinalizar, height="40", width="200", command=finalizar)
 final.place(x=1000, y=610)
 
+# Guardar
+imgGuardar = PhotoImage(file="guardar.png")
+guardar = Button(pantalla, text="Guardar", image=imgGuardar, height="40", width="40")
+guardar.place(x=1200, y=10)
 # Video
 lblVideo = Label(pantalla)
 lblVideo.place(x=165, y=60)
-
 
 pantalla.mainloop()
