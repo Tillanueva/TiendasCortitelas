@@ -6,7 +6,7 @@ from tkinter import *
 from PIL import Image, ImageTk
 from sort import *
 from datetime import *
-
+from conexion import cn
 
 # inicializar el Modelo de YOLOY
 model = YOLO("../Yolo-Weights/yolov8n.pt")
@@ -144,6 +144,8 @@ def iniciar():
     cap.set(3, 1200)
     cap.set(4, 520)
 
+    visualizar()
+    print(visualizar())
 
 
 def finalizar():
@@ -151,7 +153,7 @@ def finalizar():
     cv2.destroyAllWindows()
     print("FIN")
 
-"""
+
 def guardar():
     try:
         with cn.cursor() as cursor:
@@ -159,7 +161,6 @@ def guardar():
             cursor.execute(consulta, visualizar())
     except Exception as e:
         print("Ocurrió un error al insertar: ", e)
-"""
 
 
 def times():
