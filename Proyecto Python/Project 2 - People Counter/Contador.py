@@ -8,7 +8,6 @@ from sort import *
 from datetime import *
 from conexion import cn
 
-
 # inicializar el Modelo de YOLOY
 model = YOLO("../Yolo-Weights/yolov8n.pt")
 
@@ -26,7 +25,7 @@ classNames = ["person", "bicycle", "car", "motorbike", "aeroplane", "bus", "trai
 # Variables de conteo
 conteo = []
 salidas = []
-global count, cSalida
+
 # Coordenadas límites verticales para poder contar a la persona
 limitsUp = [0, 300, 1280, 300]  # Entrada
 limitsDown = [0, 400, 1280, 400]  # salida
@@ -122,7 +121,6 @@ def visualizar():
             lblVideo.after(10, visualizar)
 
             # Muestra en conteo de personas en la ventana
-            global count, cSalida
             count = str(len(conteo))
             cSalida = str(len(salidas))
             lblConteo = Label(pantalla, text="Ingreso de personas: " + count)
@@ -145,7 +143,6 @@ def iniciar():
     cap.set(4, 520)
 
 
-
 def finalizar():
     cap.release()
     cv2.destroyAllWindows()
@@ -159,7 +156,6 @@ def guardar():
             cursor.execute(consulta, visualizar())
     except Exception as e:
         print("Ocurrió un error al insertar: ", e)
-
 
 
 def times():
