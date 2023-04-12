@@ -1,5 +1,4 @@
 import cv2
-import imutils
 import math
 import cvzone
 from ultralytics import YOLO
@@ -7,6 +6,24 @@ from tkinter import *
 from PIL import Image, ImageTk
 from sort import *
 from datetime import *
+import pandas as pd
+import pyodbc
+
+
+def conexion():
+    server = "DESKTOP-O6UFVI0"
+    bd = 'PeopleCounter'
+    user = 'admin'
+    password = 'Proyect01'
+
+    try:
+        cn = pyodbc.connect(
+            'DRIVER = {ODBC Driver 17 for SQL server};SERVER=' + server + ';DATABASE=' + bd + ';UID=' + user + ';PWD=' + password
+        )
+        print("conexión exitosa")
+    except:
+        print("Error al intentar conectarse")
+
 
 # inicializar el Modelo de YOLOY
 model = YOLO("../Yolo-Weights/yolov8n.pt")
@@ -25,7 +42,7 @@ classNames = ["person", "bicycle", "car", "motorbike", "aeroplane", "bus", "trai
 # Variables de conteo
 conteo = []
 salidas = []
-
+global count, cSalida
 # Coordenadas límites verticales para poder contar a la persona
 limitsUp = [0, 300, 1280, 300]  # Entrada
 limitsDown = [0, 400, 1280, 400]  # salida
@@ -90,7 +107,7 @@ def visualizar():
 
             for results in resultsTracker:
                 # Parametros para el contador
-                x1, y1, x2, y2, id = results
+                x1, y1, x2, y2, id1 = results
                 x1, y1, x2, y2 = int(x1), int(x1), int(x2), int(y2)
 
                 w, h = x2 - x1, y2 - y1
@@ -102,13 +119,13 @@ def visualizar():
 
                 # si la persona pasa la linea límite se suma al contador de personas que entran
                 if limitsUp[0] < cx < limitsUp[2] and limitsUp[1] - 15 < cy < limitsUp[1] + 15:
-                    if conteo.count(id) == 0:
-                        conteo.append(id)
+                    if conteo.count(id1) == 0:
+                        conteo.append(id1)
                         cv2.line(frame, (limitsUp[3], limitsUp[2]), (limitsUp[1], limitsUp[0]), (0, 255, 0), 5)
                 # si la persona pasa la linea límite se suma al contador de personas que salen
                 if limitsDown[0] < cx < limitsDown[2] and limitsDown[1] - 15 < cy < limitsDown[1] + 15:
-                    if salidas.count(id) == 0:
-                        salidas.append(id)
+                    if salidas.count(id1) == 0:
+                        salidas.append(id1)
                         cv2.line(frame, (limitsDown[0], limitsDown[1]), (limitsDown[2], limitsDown[3]), (0, 255, 0), 5)
 
             # Convertimos el video
@@ -121,16 +138,16 @@ def visualizar():
             lblVideo.after(10, visualizar)
 
             # Muestra en conteo de personas en la ventana
-            global count, salida
+            global count, cSalida
             count = str(len(conteo))
-            salida = str(len(salidas))
+            cSalida = str(len(salidas))
             lblConteo = Label(pantalla, text="Ingreso de personas: " + count)
             lblConteo.place(x=1000, y=10)
-            lblSalidas = Label(pantalla, text="Salida de personas: " + salida)
+            lblSalidas = Label(pantalla, text="Salida de personas: " + cSalida)
             lblSalidas.place(x=1000, y=40)
-            intCount = int(count)
-            intSalida = int(salida)
-            return count, salida
+            print(visualizar())
+
+            return count, cSalida
 
         else:
 
@@ -140,11 +157,13 @@ def visualizar():
 def iniciar():
     global cap
     # Inicialización de cámara
+    print("Iniciando")
     cap = cv2.VideoCapture(0)
     cap.set(3, 1200)
     cap.set(4, 520)
 
     visualizar()
+    print(visualizar())
 
 
 def finalizar():
@@ -197,7 +216,6 @@ final.place(x=1000, y=610)
 # Video
 lblVideo = Label(pantalla)
 lblVideo.place(x=165, y=60)
-Counter = str(len(visualizar()))
-print(Counter)
+
 
 pantalla.mainloop()
