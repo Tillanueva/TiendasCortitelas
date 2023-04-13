@@ -1,34 +1,9 @@
-import tkinter
 import cv2
 import cvzone
 import math
-import openpyxl
 from ultralytics import YOLO
 from sort import *
 from datetime import *
-
-# Raiz del botón guardar
-raiz = tkinter.Tk()
-raiz.geometry("640x580")
-raiz.title("Guardar")
-
-# Función para guardar el contador
-def guardar_contadores(contadores):
-    # Abrir el archivo de excel existente o crear uno
-    try:
-        libro = openpyxl.load_workbook("contadores.xlsx")
-        hoja = libro.active
-    except FileNotFoundError:
-        libro = openpyxl.workbook()
-        hoja = libro.active
-        hoja.title = "Contadores"
-
-    # Escribir los datos en la siguiente fila vacía
-    fila_vacia = hoja.max_row + 1
-    for i, contador in enumerate(contadores):
-        hoja.cell(row=fila_vacia, column=i+1, value=contador)
-
-    libro.save("cortitelas.xlsx")
 
 
 # inicializar la cámara web

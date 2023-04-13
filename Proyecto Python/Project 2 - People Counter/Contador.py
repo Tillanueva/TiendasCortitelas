@@ -6,7 +6,6 @@ from tkinter import *
 from PIL import Image, ImageTk
 from sort import *
 from datetime import *
-from conexion import cn
 
 # inicializar el Modelo de YOLOY
 model = YOLO("../Yolo-Weights/yolov8n.pt")
@@ -39,7 +38,7 @@ def visualizar():
 
         ret, frame = cap.read()
 
-        if ret:
+        if ret == True:
 
             if rgb == 1 and hsv == 0 and gray == 0:
                 # Color BGR
@@ -85,6 +84,7 @@ def visualizar():
 
                         currentArray = np.array([x1, y1, x2, y2, conf])
                         detections = np.vstack((detections, currentArray))
+
             # Actualiza en tiempo real lo que captura el video
             resultsTracker = trackers.update(detections)
 
@@ -141,21 +141,13 @@ def iniciar():
     cap = cv2.VideoCapture(0)
     cap.set(3, 1200)
     cap.set(4, 520)
+    visualizar()
 
 
 def finalizar():
     cap.release()
     cv2.destroyAllWindows()
     print("FIN")
-
-
-def guardar():
-    try:
-        with cn.cursor() as cursor:
-            consulta = "INSERT INTO conteo(fecha, entradas, salidas) VALUES (?, ?);"
-            cursor.execute(consulta, visualizar())
-    except Exception as e:
-        print("Ocurrió un error al insertar: ", e)
 
 
 def times():
