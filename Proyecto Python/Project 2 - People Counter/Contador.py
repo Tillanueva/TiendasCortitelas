@@ -127,11 +127,9 @@ def visualizar():
             lblConteo.place(x=1000, y=10)
             lblSalidas = Label(pantalla, text="Salida de personas: " + cSalida)
             lblSalidas.place(x=1000, y=40)
-
             return count, cSalida
 
         else:
-
             cap.release()
 
 

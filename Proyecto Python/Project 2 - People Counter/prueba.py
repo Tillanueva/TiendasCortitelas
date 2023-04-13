@@ -206,8 +206,8 @@ final.place(x=1000, y=610)
 
 # Guardar
 imgGuardar = PhotoImage(file="guardar.png")
-guardar = Button(pantalla, text="Guardar", image=imgGuardar, height="40", width="40")
-guardar.place(x=1200, y=10)
+btnGuardar = Button(pantalla, text="Guardar", image=imgGuardar, height="40", width="40")
+btnGuardar.place(x=1200, y=10)
 
 # Video
 lblVideo = Label(pantalla)
