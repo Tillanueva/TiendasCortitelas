@@ -1,14 +1,15 @@
 import pyodbc
 
+
 server = "DESKTOP-O6UFVI0"
-bd = 'PeopleCounter'
-user = 'admin'
+database = 'PROJECT_PC01'
+username = 'Project01'
 password = 'Proyect01'
 
-try:
-    cn = pyodbc.connect(
-        'DRIVER = {ODBC Driver 17 for SQL server};SERVER=' + server + ';DATABASE=' + bd + ';UID=' + user + ';PWD=' + password
-    )
-    print("conexión exitosa")
-except:
-    print("Error al intentar conectarse")
+cnxn = pyodbc.connect(
+        'DRIVER={ODBC Driver 18 for SQL Server};SERVER=' + server + ';DATABASE=' + database + ';ENCRYPT=yes'
+                                                                                              ';UID=' + username + ';PWD=' + password)
+cursor = cnxn.cursor()
+print("conexión exitosa")
+
+

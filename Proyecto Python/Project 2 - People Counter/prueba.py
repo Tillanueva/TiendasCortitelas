@@ -7,6 +7,7 @@ from PIL import Image, ImageTk
 from sort import *
 from datetime import *
 from conexion import cn
+import pandas as pd
 
 # inicializar el Modelo de YOLOY
 model = YOLO("../Yolo-Weights/yolov8n.pt")
