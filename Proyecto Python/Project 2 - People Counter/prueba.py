@@ -6,8 +6,10 @@ from tkinter import *
 from PIL import Image, ImageTk
 from sort import *
 from datetime import *
-from conexion import cn
-import pandas as pd
+import pyodbc
+
+#CONEXION BASE DE DATOS
+conn = pyodbc.connect('DRIVER={SQL Server};SERVER=DESKTOP-O6UFVI0;DATABASE=PROJECT_PC01;UID=sa;PWD=#Domctrlinf')
 
 # inicializar el Modelo de YOLOY
 model = YOLO("../Yolo-Weights/yolov8n.pt")
@@ -156,9 +158,10 @@ def finalizar():
 
 
 def guardar():
+    cursor = conn.cursor()
     try:
-        with cn.cursor() as cursor:
-            consulta = "INSERT INTO conteo(fecha, entradas, salidas) VALUES (?, ?);"
+        with cursor:
+            consulta = "INSERT INTO conteo(fecha, entradas, salidas) VALUES ( GetDate(),?, ?);"
             cursor.execute(consulta, visualizar())
     except Exception as e:
         print("Ocurrió un error al insertar: ", e)
@@ -207,7 +210,7 @@ final.place(x=1000, y=610)
 
 # Guardar
 imgGuardar = PhotoImage(file="guardar.png")
-btnGuardar = Button(pantalla, text="Guardar", image=imgGuardar, height="40", width="40")
+btnGuardar = Button(pantalla, text="Guardar", image=imgGuardar, height="40", width="40", command=guardar)
 btnGuardar.place(x=1200, y=10)
 
 # Video

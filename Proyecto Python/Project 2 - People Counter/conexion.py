@@ -1,15 +1,9 @@
 import pyodbc
 
+conn = pyodbc.connect('DRIVER={SQL Server};SERVER=DESKTOP-O6UFVI0;DATABASE=PROJECT_PC01;UID=sa;PWD=#Domctrlinf')
+cursor = conn.cursor()
 
-server = "DESKTOP-O6UFVI0"
-database = 'PROJECT_PC01'
-username = 'Project01'
-password = 'Proyect01'
-
-cnxn = pyodbc.connect(
-        'DRIVER={ODBC Driver 18 for SQL Server};SERVER=' + server + ';DATABASE=' + database + ';ENCRYPT=yes'
-                                                                                              ';UID=' + username + ';PWD=' + password)
-cursor = cnxn.cursor()
-print("conexión exitosa")
-
-
+#ahora un query basico
+cursor.execute("SELECT * FROM conteo ")
+for row in cursor.fetchall():
+    print(row)
