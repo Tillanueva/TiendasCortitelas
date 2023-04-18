@@ -161,7 +161,7 @@ def guardar():
     cursor = conn.cursor()
     try:
         with cursor:
-            consulta = "INSERT INTO conteo(fecha, entradas, salidas) VALUES ( GetDate(),?, ?);"
+            consulta = "INSERT INTO conteo(entradas, salidas) VALUES (?, ?);"
             cursor.execute(consulta, visualizar())
     except Exception as e:
         print("Ocurrió un error al insertar: ", e)
