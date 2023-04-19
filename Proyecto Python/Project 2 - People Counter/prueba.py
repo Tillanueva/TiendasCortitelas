@@ -132,9 +132,6 @@ def visualizar():
             lblConteo.place(x=1000, y=10)
             lblSalidas = Label(pantalla, text="Salida de personas: " + cSalida)
             lblSalidas.place(x=1000, y=40)
-            tiempo = timeit.timeit('lista = [i for i in range(1000000) if i%2==0]', number=5)
-            # Calculamos el tiempo medio
-            print(tiempo / 5)  # 0.18671
             return count, cSalida
 
         else:
@@ -144,14 +141,11 @@ def visualizar():
 
 def iniciar():
     global cap
-    # Inicialización de cámara
     print("Iniciando")
     cap = cv2.VideoCapture(0)
     cap.set(3, 1200)
     cap.set(4, 520)
-
     visualizar()
-    print(visualizar())
 
 
 def finalizar():
