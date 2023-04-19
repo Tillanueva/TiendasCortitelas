@@ -7,6 +7,7 @@ from PIL import Image, ImageTk
 from sort import *
 from datetime import *
 import pyodbc
+import timeit
 
 #CONEXION BASE DE DATOS
 conn = pyodbc.connect('DRIVER={SQL Server};SERVER=DESKTOP-O6UFVI0;DATABASE=PROJECT_PC01;UID=sa;PWD=#projectPC')
@@ -131,7 +132,9 @@ def visualizar():
             lblConteo.place(x=1000, y=10)
             lblSalidas = Label(pantalla, text="Salida de personas: " + cSalida)
             lblSalidas.place(x=1000, y=40)
-
+            tiempo = timeit.timeit('lista = [i for i in range(1000000) if i%2==0]', number=5)
+            # Calculamos el tiempo medio
+            print(tiempo / 5)  # 0.18671
             return count, cSalida
 
         else:
