@@ -9,6 +9,3 @@ cursor.execute("SELECT * FROM conteo ")
 for row in cursor.fetchall():
     print(row)
 
-tiempo = timeit.timeit('lista = [i for i in range(1000000) if i%2==0]', number=5)
-# Calculamos el tiempo medio
-print(tiempo/5) # 0.18671

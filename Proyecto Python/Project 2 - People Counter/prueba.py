@@ -156,9 +156,9 @@ def finalizar():
 
 def guardar():
     cursor = conn.cursor()
+    consulta = "INSERT INTO conteo(entradas, salidas) VALUES (?, ?);"
     try:
         with cursor:
-            consulta = "INSERT INTO conteo(entradas, salidas) VALUES (?, ?);"
             cursor.execute(consulta, visualizar())
     except Exception as e:
         print("Ocurrió un error al insertar: ", e)
@@ -187,6 +187,7 @@ background = Label(image=imagenF, text="Fondo")
 background.place(x=0, y=0, relwidth=1, relheight=1)
 
 texto1 = Label(pantalla, text="VIDEO EN TIEMPO REAL: ")
+texto1.config(font="Sans-serif")
 texto1.place(x=580, y=10)
 
 # Muestra fecha actual
