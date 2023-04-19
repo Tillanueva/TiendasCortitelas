@@ -9,7 +9,7 @@ from datetime import *
 import pyodbc
 
 #CONEXION BASE DE DATOS
-conn = pyodbc.connect('DRIVER={SQL Server};SERVER=DESKTOP-O6UFVI0;DATABASE=PROJECT_PC01;UID=sa;PWD=#Domctrlinf')
+conn = pyodbc.connect('DRIVER={SQL Server};SERVER=DESKTOP-O6UFVI0;DATABASE=PROJECT_PC01;UID=sa;PWD=#projectPC')
 
 # inicializar el Modelo de YOLOY
 model = YOLO("../Yolo-Weights/yolov8n.pt")
