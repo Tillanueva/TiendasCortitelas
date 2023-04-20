@@ -7,9 +7,9 @@ from PIL import Image, ImageTk
 from sort import *
 from datetime import *
 import pyodbc
-import timeit
+import random
 
-#CONEXION BASE DE DATOS
+# CONEXION BASE DE DATOS
 conn = pyodbc.connect('DRIVER={SQL Server};SERVER=DESKTOP-O6UFVI0;DATABASE=PROJECT_PC01;UID=sa;PWD=#projectPC')
 
 # inicializar el Modelo de YOLOY
@@ -28,7 +28,6 @@ classNames = ["person", "bicycle", "car", "motorbike", "aeroplane", "bus", "trai
 
 # Variables de conteo
 conteo = []
-salidas = []
 global count
 # Coordenadas límites verticales para poder contar a la persona
 limitsUp = [0, 400, 1280, 400]  # Entrada
@@ -40,24 +39,24 @@ trackers = Sort(max_age=20, min_hits=3, iou_threshold=0.3)
 def visualizar():
     if cap is not None:
 
-        ret, frame = cap.read()
+        ret, video = cap.read()
 
         if ret:
 
             if rgb == 1 and hsv == 0 and gray == 0:
                 # Color BGR
-                frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+                video = cv2.cvtColor(video, cv2.COLOR_BGR2RGB)
 
             elif rgb == 0 and hsv == 1 and gray == 0:
                 # Color HSV
-                frame = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+                video = cv2.cvtColor(video, cv2.COLOR_BGR2HSV)
 
             elif rgb == 0 and hsv == 0 and gray == 1:
                 # Color GRAY
-                frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+                video = cv2.cvtColor(video, cv2.COLOR_BGR2GRAY)
 
             # captura el modelo del frame que capturó la cámara web y la lee en tiempo real
-            results = model(frame, stream=True)
+            results = model(video, stream=True)
 
             detections = np.empty((0, 5))
 
@@ -80,10 +79,10 @@ def visualizar():
                     # Si el objeto es una persona, dibuja un recuadro alrededor
                     if classNames[cls] == "person" and conf > 0.3:
                         # cornerRect dibuja el cuadro con los parámetros anteriores
-                        cvzone.cornerRect(frame, (x1, y1, w, h))
+                        cvzone.cornerRect(video, (x1, y1, w, h))
 
                         # Coloca el nombre del objeto (persona)
-                        cvzone.putTextRect(frame, f'{classNames[cls]} {conf}', (max(0, x1), max(35, y1)), scale=1,
+                        cvzone.putTextRect(video, f'{classNames[cls]} {conf}', (max(0, x1), max(35, y1)), scale=1,
                                            thickness=1)
 
                         currentArray = np.array([x1, y1, x2, y2, conf])
@@ -101,13 +100,13 @@ def visualizar():
                 cx, cy = x1 + w // 2, y1 + h // 2
 
                 # Dibuja un punto medio en el recuadro de la persona
-                cv2.circle(frame, (cx, cy), 5, (255, 0, 255), cv2.FILLED)
+                cv2.circle(video, (cx, cy), 5, (255, 0, 255), cv2.FILLED)
 
                 # si la persona pasa la linea límite se suma al contador de personas que entran
                 if limitsUp[0] < cx < limitsUp[2] and limitsUp[1] - 15 < cy < limitsUp[1] + 15:
                     if conteo.count(id1) == 0:
                         conteo.append(id1)
-                        cv2.line(frame, (limitsUp[3], limitsUp[2]), (limitsUp[1], limitsUp[0]), (0, 255, 0), 5)
+                        cv2.line(video, (limitsUp[3], limitsUp[2]), (limitsUp[1], limitsUp[0]), (0, 255, 0), 5)
                 # si la persona pasa la linea límite se suma al contador de personas que salen
                 # if limitsDown[0] < cx < limitsDown[2] and limitsDown[1] - 15 < cy < limitsDown[1] + 15:
                 #     if salidas.count(id1) == 0:
@@ -115,7 +114,7 @@ def visualizar():
                 #       cv2.line(frame, (limitsDown[0], limitsDown[1]), (limitsDown[2], limitsDown[3]), (0, 255, 0), 5)
 
             # Convertimos el video
-            im = Image.fromarray(frame)
+            im = Image.fromarray(video)
             img = ImageTk.PhotoImage(image=im)
 
             # Mostramos en el GUI
