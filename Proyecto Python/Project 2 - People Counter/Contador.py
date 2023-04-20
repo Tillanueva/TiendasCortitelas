@@ -6,6 +6,11 @@ from tkinter import *
 from PIL import Image, ImageTk
 from sort import *
 from datetime import *
+import pyodbc
+import timeit
+
+#CONEXION BASE DE DATOS
+conn = pyodbc.connect('DRIVER={SQL Server};SERVER=DESKTOP-O6UFVI0;DATABASE=PROJECT_PC01;UID=sa;PWD=#projectPC')
 
 # inicializar el Modelo de YOLOY
 model = YOLO("../Yolo-Weights/yolov8n.pt")
@@ -24,21 +29,20 @@ classNames = ["person", "bicycle", "car", "motorbike", "aeroplane", "bus", "trai
 # Variables de conteo
 conteo = []
 salidas = []
-
+global count
 # Coordenadas límites verticales para poder contar a la persona
-limitsUp = [0, 300, 1280, 300]  # Entrada
-limitsDown = [0, 400, 1280, 400]  # salida
+limitsUp = [0, 400, 1280, 400]  # Entrada
+
 
 # variable de seguimiento de objetos
 trackers = Sort(max_age=20, min_hits=3, iou_threshold=0.3)
-
 
 def visualizar():
     if cap is not None:
 
         ret, frame = cap.read()
 
-        if ret == True:
+        if ret:
 
             if rgb == 1 and hsv == 0 and gray == 0:
                 # Color BGR
@@ -84,7 +88,6 @@ def visualizar():
 
                         currentArray = np.array([x1, y1, x2, y2, conf])
                         detections = np.vstack((detections, currentArray))
-
             # Actualiza en tiempo real lo que captura el video
             resultsTracker = trackers.update(detections)
 
@@ -106,10 +109,10 @@ def visualizar():
                         conteo.append(id1)
                         cv2.line(frame, (limitsUp[3], limitsUp[2]), (limitsUp[1], limitsUp[0]), (0, 255, 0), 5)
                 # si la persona pasa la linea límite se suma al contador de personas que salen
-                if limitsDown[0] < cx < limitsDown[2] and limitsDown[1] - 15 < cy < limitsDown[1] + 15:
-                    if salidas.count(id1) == 0:
-                        salidas.append(id1)
-                        cv2.line(frame, (limitsDown[0], limitsDown[1]), (limitsDown[2], limitsDown[3]), (0, 255, 0), 5)
+                # if limitsDown[0] < cx < limitsDown[2] and limitsDown[1] - 15 < cy < limitsDown[1] + 15:
+                #     if salidas.count(id1) == 0:
+                #        salidas.append(id1)
+                #       cv2.line(frame, (limitsDown[0], limitsDown[1]), (limitsDown[2], limitsDown[3]), (0, 255, 0), 5)
 
             # Convertimos el video
             im = Image.fromarray(frame)
@@ -121,21 +124,20 @@ def visualizar():
             lblVideo.after(10, visualizar)
 
             # Muestra en conteo de personas en la ventana
+            global count
             count = str(len(conteo))
-            cSalida = str(len(salidas))
             lblConteo = Label(pantalla, text="Ingreso de personas: " + count)
             lblConteo.place(x=1000, y=10)
-            lblSalidas = Label(pantalla, text="Salida de personas: " + cSalida)
-            lblSalidas.place(x=1000, y=40)
-            return count, cSalida
+            return count
 
         else:
+
             cap.release()
 
 
 def iniciar():
     global cap
-    # Inicialización de cámara
+    print("Iniciando")
     cap = cv2.VideoCapture(0)
     cap.set(3, 1200)
     cap.set(4, 520)
@@ -146,6 +148,16 @@ def finalizar():
     cap.release()
     cv2.destroyAllWindows()
     print("FIN")
+
+
+def guardar():
+    cursor = conn.cursor()
+    consulta = "INSERT INTO conteo(entradas) VALUES (?);"
+    try:
+        with cursor:
+            cursor.execute(consulta, visualizar())
+    except Exception as e:
+        print("Ocurrió un error al insertar: ", e)
 
 
 def times():
@@ -171,6 +183,7 @@ background = Label(image=imagenF, text="Fondo")
 background.place(x=0, y=0, relwidth=1, relheight=1)
 
 texto1 = Label(pantalla, text="VIDEO EN TIEMPO REAL: ")
+texto1.config(font="Sans-serif")
 texto1.place(x=580, y=10)
 
 # Muestra fecha actual
@@ -191,11 +204,11 @@ final.place(x=1000, y=610)
 
 # Guardar
 imgGuardar = PhotoImage(file="guardar.png")
-guardar = Button(pantalla, text="Guardar", image=imgGuardar, height="40", width="40")
-guardar.place(x=1200, y=10)
+btnGuardar = Button(pantalla, text="Guardar", image=imgGuardar, height="40", width="40", command=guardar)
+btnGuardar.place(x=1200, y=10)
 
 # Video
 lblVideo = Label(pantalla)
-lblVideo.place(x=165, y=60)
+lblVideo.place(x=265, y=60)
 
 pantalla.mainloop()

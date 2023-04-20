@@ -31,7 +31,7 @@ conteo = []
 salidas = []
 global count
 # Coordenadas límites verticales para poder contar a la persona
-limitsUp = [0, 400, 1280, 400]  # Entrada
+limitsUp = [0, 300, 1280, 300]  # Entrada
 
 
 # variable de seguimiento de objetos
@@ -122,7 +122,7 @@ def visualizar():
             # Mostramos en el GUI
             lblVideo.configure(image=img)
             lblVideo.image = img
-            lblVideo.after(10, visualizar)
+            lblVideo.after(5, visualizar)
 
             # Muestra en conteo de personas en la ventana
             global count
