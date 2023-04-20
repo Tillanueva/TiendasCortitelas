@@ -29,10 +29,10 @@ classNames = ["person", "bicycle", "car", "motorbike", "aeroplane", "bus", "trai
 # Variables de conteo
 conteo = []
 salidas = []
-global count, cSalida
+global count
 # Coordenadas límites verticales para poder contar a la persona
-limitsUp = [0, 300, 1280, 300]  # Entrada
-limitsDown = [0, 400, 1280, 400]  # salida
+limitsUp = [0, 400, 1280, 400]  # Entrada
+
 
 # variable de seguimiento de objetos
 trackers = Sort(max_age=20, min_hits=3, iou_threshold=0.3)
@@ -110,10 +110,10 @@ def visualizar():
                         conteo.append(id1)
                         cv2.line(frame, (limitsUp[3], limitsUp[2]), (limitsUp[1], limitsUp[0]), (0, 255, 0), 5)
                 # si la persona pasa la linea límite se suma al contador de personas que salen
-                if limitsDown[0] < cx < limitsDown[2] and limitsDown[1] - 15 < cy < limitsDown[1] + 15:
-                    if salidas.count(id1) == 0:
-                        salidas.append(id1)
-                        cv2.line(frame, (limitsDown[0], limitsDown[1]), (limitsDown[2], limitsDown[3]), (0, 255, 0), 5)
+                # if limitsDown[0] < cx < limitsDown[2] and limitsDown[1] - 15 < cy < limitsDown[1] + 15:
+                #     if salidas.count(id1) == 0:
+                #        salidas.append(id1)
+                #       cv2.line(frame, (limitsDown[0], limitsDown[1]), (limitsDown[2], limitsDown[3]), (0, 255, 0), 5)
 
             # Convertimos el video
             im = Image.fromarray(frame)
@@ -125,14 +125,11 @@ def visualizar():
             lblVideo.after(10, visualizar)
 
             # Muestra en conteo de personas en la ventana
-            global count, cSalida
+            global count
             count = str(len(conteo))
-            cSalida = str(len(salidas))
             lblConteo = Label(pantalla, text="Ingreso de personas: " + count)
             lblConteo.place(x=1000, y=10)
-            lblSalidas = Label(pantalla, text="Salida de personas: " + cSalida)
-            lblSalidas.place(x=1000, y=40)
-            return count, cSalida
+            return count
 
         else:
 
@@ -156,7 +153,7 @@ def finalizar():
 
 def guardar():
     cursor = conn.cursor()
-    consulta = "INSERT INTO conteo(entradas, salidas) VALUES (?, ?);"
+    consulta = "INSERT INTO conteo(entradas) VALUES (?);"
     try:
         with cursor:
             cursor.execute(consulta, visualizar())
