@@ -109,18 +109,15 @@ def visualizar():
                     if conteo.count(id1) == 0:
                         conteo.append(id1)
                         cv2.line(frame, (limitsUp[3], limitsUp[2]), (limitsUp[1], limitsUp[0]), (0, 255, 0), 5)
-                # si la persona pasa la linea límite se suma al contador de personas que salen
-                # if limitsDown[0] < cx < limitsDown[2] and limitsDown[1] - 15 < cy < limitsDown[1] + 15:
-                #     if salidas.count(id1) == 0:
-                #        salidas.append(id1)
-                #       cv2.line(frame, (limitsDown[0], limitsDown[1]), (limitsDown[2], limitsDown[3]), (0, 255, 0), 5)
+
 
             # Convertimos el video
             im = Image.fromarray(frame)
             img = ImageTk.PhotoImage(image=im)
 
+
             # Mostramos en el GUI
-            lblVideo.configure(image=img)
+            lblVideo.configure(image=img, width="900", height="500")
             lblVideo.image = img
             lblVideo.after(5, visualizar)
 
@@ -140,7 +137,7 @@ def iniciar():
     global cap
     print("Iniciando")
     cap = cv2.VideoCapture(0)
-    cap.set(3, 1200)
+    cap.set(3,1500)
     cap.set(4, 520)
     visualizar()
 
@@ -196,12 +193,12 @@ times()  # Función captura fecha actual
 # Iniciar
 imgInicio = PhotoImage(file="Inicio.png")
 inicio = Button(pantalla, text="Iniciar", image=imgInicio, height="40", width="200", command=iniciar)
-inicio.place(x=90, y=610)
+inicio.place(x=1050, y=80)
 
 # Finalizar video
 imgFinalizar = PhotoImage(file="Finalizar.png")
 final = Button(pantalla, text="Finalizar", image=imgFinalizar, height="40", width="200", command=finalizar)
-final.place(x=1000, y=610)
+final.place(x=1050, y=160)
 
 # Guardar
 imgGuardar = PhotoImage(file="guardar.png")

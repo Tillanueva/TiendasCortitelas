@@ -7,7 +7,7 @@ from PIL import Image, ImageTk
 from sort import *
 from datetime import *
 import pyodbc
-import random
+import timeit
 
 # CONEXION BASE DE DATOS
 conn = pyodbc.connect('DRIVER={SQL Server};SERVER=DESKTOP-O6UFVI0;DATABASE=PROJECT_PC01;UID=sa;PWD=#projectPC')
@@ -28,35 +28,36 @@ classNames = ["person", "bicycle", "car", "motorbike", "aeroplane", "bus", "trai
 
 # Variables de conteo
 conteo = []
+salidas = []
 global count
 # Coordenadas límites verticales para poder contar a la persona
-limitsUp = [0, 400, 1280, 400]  # Entrada
-
+limitsUp = [0, 300, 1280, 300]  # Entrada
 
 # variable de seguimiento de objetos
 trackers = Sort(max_age=20, min_hits=3, iou_threshold=0.3)
 
+
 def visualizar():
     if cap is not None:
 
-        ret, video = cap.read()
+        ret, frame = cap.read()
 
         if ret:
 
             if rgb == 1 and hsv == 0 and gray == 0:
                 # Color BGR
-                video = cv2.cvtColor(video, cv2.COLOR_BGR2RGB)
+                frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 
             elif rgb == 0 and hsv == 1 and gray == 0:
                 # Color HSV
-                video = cv2.cvtColor(video, cv2.COLOR_BGR2HSV)
+                frame = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
 
             elif rgb == 0 and hsv == 0 and gray == 1:
                 # Color GRAY
-                video = cv2.cvtColor(video, cv2.COLOR_BGR2GRAY)
+                frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
             # captura el modelo del frame que capturó la cámara web y la lee en tiempo real
-            results = model(video, stream=True)
+            results = model(frame, stream=True)
 
             detections = np.empty((0, 5))
 
@@ -79,10 +80,10 @@ def visualizar():
                     # Si el objeto es una persona, dibuja un recuadro alrededor
                     if classNames[cls] == "person" and conf > 0.3:
                         # cornerRect dibuja el cuadro con los parámetros anteriores
-                        cvzone.cornerRect(video, (x1, y1, w, h))
+                        cvzone.cornerRect(frame, (x1, y1, w, h))
 
                         # Coloca el nombre del objeto (persona)
-                        cvzone.putTextRect(video, f'{classNames[cls]} {conf}', (max(0, x1), max(35, y1)), scale=1,
+                        cvzone.putTextRect(frame, f'{classNames[cls]} {conf}', (max(0, x1), max(35, y1)), scale=1,
                                            thickness=1)
 
                         currentArray = np.array([x1, y1, x2, y2, conf])
@@ -100,27 +101,22 @@ def visualizar():
                 cx, cy = x1 + w // 2, y1 + h // 2
 
                 # Dibuja un punto medio en el recuadro de la persona
-                cv2.circle(video, (cx, cy), 5, (255, 0, 255), cv2.FILLED)
+                cv2.circle(frame, (cx, cy), 5, (255, 0, 255), cv2.FILLED)
 
                 # si la persona pasa la linea límite se suma al contador de personas que entran
                 if limitsUp[0] < cx < limitsUp[2] and limitsUp[1] - 15 < cy < limitsUp[1] + 15:
                     if conteo.count(id1) == 0:
                         conteo.append(id1)
-                        cv2.line(video, (limitsUp[3], limitsUp[2]), (limitsUp[1], limitsUp[0]), (0, 255, 0), 5)
-                # si la persona pasa la linea límite se suma al contador de personas que salen
-                # if limitsDown[0] < cx < limitsDown[2] and limitsDown[1] - 15 < cy < limitsDown[1] + 15:
-                #     if salidas.count(id1) == 0:
-                #        salidas.append(id1)
-                #       cv2.line(frame, (limitsDown[0], limitsDown[1]), (limitsDown[2], limitsDown[3]), (0, 255, 0), 5)
+                        cv2.line(frame, (limitsUp[3], limitsUp[2]), (limitsUp[1], limitsUp[0]), (0, 255, 0), 5)
 
             # Convertimos el video
-            im = Image.fromarray(video)
+            im = Image.fromarray(frame)
             img = ImageTk.PhotoImage(image=im)
 
             # Mostramos en el GUI
-            lblVideo.configure(image=img)
+            lblVideo.configure(image=img, width="900", height="500")
             lblVideo.image = img
-            lblVideo.after(10, visualizar)
+            lblVideo.after(5, visualizar)
 
             # Muestra en conteo de personas en la ventana
             global count
@@ -138,7 +134,7 @@ def iniciar():
     global cap
     print("Iniciando")
     cap = cv2.VideoCapture(0)
-    cap.set(3, 1200)
+    cap.set(3, 1500)
     cap.set(4, 520)
     visualizar()
 
@@ -194,12 +190,12 @@ times()  # Función captura fecha actual
 # Iniciar
 imgInicio = PhotoImage(file="Inicio.png")
 inicio = Button(pantalla, text="Iniciar", image=imgInicio, height="40", width="200", command=iniciar)
-inicio.place(x=90, y=610)
+inicio.place(x=1050, y=80)
 
 # Finalizar video
 imgFinalizar = PhotoImage(file="Finalizar.png")
 final = Button(pantalla, text="Finalizar", image=imgFinalizar, height="40", width="200", command=finalizar)
-final.place(x=1000, y=610)
+final.place(x=1050, y=160)
 
 # Guardar
 imgGuardar = PhotoImage(file="guardar.png")
@@ -208,6 +204,6 @@ btnGuardar.place(x=1200, y=10)
 
 # Video
 lblVideo = Label(pantalla)
-lblVideo.place(x=265, y=60)
+lblVideo.place(x=165, y=60)
 
 pantalla.mainloop()
