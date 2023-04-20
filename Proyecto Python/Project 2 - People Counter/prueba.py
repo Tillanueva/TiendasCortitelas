@@ -92,6 +92,8 @@ def visualizar():
             # Actualiza en tiempo real lo que captura el video
             resultsTracker = trackers.update(detections)
 
+
+
             for results in resultsTracker:
                 # Parametros para el contador
                 x1, y1, x2, y2, id1 = results
@@ -108,7 +110,7 @@ def visualizar():
                 if limitsUp[0] < cx < limitsUp[2] and limitsUp[1] - 15 < cy < limitsUp[1] + 15:
                     if conteo.count(id1) == 0:
                         conteo.append(id1)
-                        cv2.line(frame, (limitsUp[3], limitsUp[2]), (limitsUp[1], limitsUp[0]), (0, 255, 0), 5)
+
 
 
             # Convertimos el video
