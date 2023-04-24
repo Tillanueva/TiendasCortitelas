@@ -174,16 +174,7 @@ def guardar():
 
     else:
         cursor.execute(consulta, visualizar())
-        
-        top1 = customtkinter.CTkToplevel(relief=FLAT)
-        top1.title("Guardado")
-        top1.geometry("350x200")
-        top1.resizable(False, False)
 
-        guardado = customtkinter.CTkLabel(top, text="Guardado correctamente")
-        guardado.place(x=100, y=85)
-
-        top1.mainloop()
 
 def times():
     fechaC = datetime.today()  # Capruta date actual
