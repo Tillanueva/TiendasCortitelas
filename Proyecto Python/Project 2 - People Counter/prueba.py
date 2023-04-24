@@ -8,6 +8,13 @@ from sort import *
 from datetime import *
 import pyodbc
 import timeit
+from tkinter import messagebox
+import customtkinter
+
+
+customtkinter.set_appearance_mode("dark")
+customtkinter.set_default_color_theme("dark-blue")
+
 
 #CONEXION BASE DE DATOS
 conn = pyodbc.connect('DRIVER={SQL Server};SERVER=DESKTOP-O6UFVI0;DATABASE=PROJECT_PC01;UID=sa;PWD=#projectPC')
@@ -119,20 +126,20 @@ def visualizar():
 
 
             # Mostramos en el GUI
-            lblVideo.configure(image=img, width="900", height="500")
+            lblVideo.configure(image=img)
             lblVideo.image = img
             lblVideo.after(5, visualizar)
 
             # Muestra en conteo de personas en la ventana
             global count
             count = str(len(conteo))
-            lblConteo = Label(pantalla, text="Ingreso de personas: " + count)
-            lblConteo.place(x=1000, y=10)
+            lblConteo = customtkinter.CTkLabel(master = frame2 , text="Ingreso de personas: " + count)
+            lblConteo.place(x=10, y=10)
             return count
 
         else:
-
             cap.release()
+
 
 
 def iniciar():
@@ -153,17 +160,35 @@ def finalizar():
 def guardar():
     cursor = conn.cursor()
     consulta = "INSERT INTO conteo(entradas) VALUES (?);"
-    try:
-        with cursor:
-            cursor.execute(consulta, visualizar())
-    except Exception as e:
-        print("Ocurrió un error al insertar: ", e)
+    if visualizar() == None:
+        print("No hay datos que guardar")
+        top = customtkinter.CTkToplevel( relief= FLAT)
+        top.title("Error")
+        top.geometry("350x200")
+        top.resizable(False, False)
 
+        error1 = customtkinter.CTkLabel(top, text = "No hay datos que guardar")
+        error1.place(x= 100, y = 85)
+
+        top.mainloop()
+
+    else:
+        cursor.execute(consulta, visualizar())
+        
+        top1 = customtkinter.CTkToplevel(relief=FLAT)
+        top1.title("Guardado")
+        top1.geometry("350x200")
+        top1.resizable(False, False)
+
+        guardado = customtkinter.CTkLabel(top, text="Guardado correctamente")
+        guardado.place(x=100, y=85)
+
+        top1.mainloop()
 
 def times():
     fechaC = datetime.today()  # Capruta date actual
     current_date = fechaC.strftime("%m/%d/%Y")
-    lblFecha.config(text=current_date)
+    lblFecha.configure(text= "Fecha:"+ current_date)
 
 
 # VARIABLES
@@ -173,42 +198,46 @@ hsv = 0
 gray = 0
 
 # INTERFAZ
-pantalla = Tk()
+pantalla = customtkinter.CTk()
 pantalla.title("Tiendas Cortitelas | People Counter")
-pantalla.geometry("1280x720")  # Dimensión de la ventana
+pantalla.geometry("920x620")  # Dimensión de la ventana
+pantalla.resizable(False, False)
 
-# Fondo
-imagenF = PhotoImage(file="Fondo.png")
-background = Label(image=imagenF, text="Fondo")
-background.place(x=0, y=0, relwidth=1, relheight=1)
+frame1 = customtkinter.CTkFrame(master = pantalla, width=640, height= 60 )
+frame1.pack(expand = True)
+frame1.place(x=10, y=10)
 
-texto1 = Label(pantalla, text="VIDEO EN TIEMPO REAL: ")
-texto1.config(font="Sans-serif")
-texto1.place(x=580, y=10)
+frame2 = customtkinter.CTkFrame(master = pantalla, width=250, height = 350)
+frame2.pack(expand = True)
+frame2.place(x = 660, y = 80)
+
+frame3 = customtkinter.CTkFrame(master = pantalla, width= 250, height= 60)
+frame3.place(x = 660, y = 10)
+
+texto1 = customtkinter.CTkLabel(master=frame1, text="Video en tiempo real")
+texto1.place(x= 250, y=10)
+
 
 # Muestra fecha actual
-lblFecha = Label(pantalla)
-lblFecha.place(x=10, y=10)
+lblFecha = customtkinter.CTkLabel(master = frame3)
+lblFecha.place(x=30, y=10)
 times()  # Función captura fecha actual
 
 # BOTONES
 # Iniciar
-imgInicio = PhotoImage(file="Inicio.png")
-inicio = Button(pantalla, text="Iniciar", image=imgInicio, height="40", width="200", command=iniciar)
-inicio.place(x=1050, y=80)
+inicio = customtkinter.CTkButton(master = frame2, text="Iniciar", command=iniciar, width=230, height=40)
+inicio.place(x=10, y=70)
 
 # Finalizar video
-imgFinalizar = PhotoImage(file="Finalizar.png")
-final = Button(pantalla, text="Finalizar", image=imgFinalizar, height="40", width="200", command=finalizar)
-final.place(x=1050, y=160)
+final = customtkinter.CTkButton(master= frame2, text="final", command=finalizar, width=230, height=40)
+final.place(x=10, y=170)
 
 # Guardar
-imgGuardar = PhotoImage(file="guardar.png")
-btnGuardar = Button(pantalla, text="Guardar", image=imgGuardar, height="40", width="40", command=guardar)
-btnGuardar.place(x=1200, y=10)
+btnGuardar = customtkinter.CTkButton(master=frame2, text="guardar", command=guardar, width=230, height=40)
+btnGuardar.place(x=10, y=120)
 
 # Video
-lblVideo = Label(pantalla)
-lblVideo.place(x=165, y=60)
+lblVideo = customtkinter.CTkLabel( pantalla, text=" ", fg_color="transparent")
+lblVideo.place(x=10, y=80)
 
 pantalla.mainloop()
