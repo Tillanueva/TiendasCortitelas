@@ -221,11 +221,12 @@ inicio.place(x=10, y=70)
 
 # Finalizar video
 final = customtkinter.CTkButton(master= frame2, text="final", command=finalizar, width=230, height=40)
-final.place(x=10, y=170)
+final.place(x=10, y=120)
 
 # Guardar
-btnGuardar = customtkinter.CTkButton(master=frame2, text="guardar", command=guardar, width=230, height=40)
-btnGuardar.place(x=10, y=120)
+imgGuardar = PhotoImage(file="guardar.png")
+btnGuardar = Button(master= frame2, text="Guardar", image=imgGuardar, height="40", width="40", command=guardar)
+btnGuardar.place(x=10, y=170)
 
 # Video
 lblVideo = customtkinter.CTkLabel( pantalla, text=" ", fg_color="transparent")

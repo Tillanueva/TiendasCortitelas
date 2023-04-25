@@ -1,3 +1,5 @@
+import tkinter
+
 import cv2
 import math
 import cvzone
@@ -8,6 +10,7 @@ from sort import *
 from datetime import *
 import pyodbc
 import timeit
+from tkinter import messagebox
 
 # CONEXION BASE DE DATOS
 conn = pyodbc.connect('DRIVER={SQL Server};SERVER=DESKTOP-O6UFVI0;DATABASE=PROJECT_PC01;UID=sa;PWD=#projectPC')
@@ -38,6 +41,7 @@ trackers = Sort(max_age=20, min_hits=3, iou_threshold=0.3)
 
 
 def visualizar():
+
     if cap is not None:
 
         ret, frame = cap.read()
@@ -114,7 +118,7 @@ def visualizar():
             img = ImageTk.PhotoImage(image=im)
 
             # Mostramos en el GUI
-            lblVideo.configure(image=img, width="900", height="500")
+            lblVideo.configure(image=img)
             lblVideo.image = img
             lblVideo.after(5, visualizar)
 
@@ -122,7 +126,8 @@ def visualizar():
             global count
             count = str(len(conteo))
             lblConteo = Label(pantalla, text="Ingreso de personas: " + count)
-            lblConteo.place(x=1000, y=10)
+            lblConteo.config(font="Sans-serif")
+            lblConteo.place(x=660, y=10)
             return count
 
         else:
@@ -132,10 +137,10 @@ def visualizar():
 
 def iniciar():
     global cap
-    print("Iniciando")
     cap = cv2.VideoCapture(0)
     cap.set(3, 1500)
     cap.set(4, 520)
+    btnGuardar["state"] = tkinter.NORMAL
     visualizar()
 
 
@@ -151,14 +156,16 @@ def guardar():
     try:
         with cursor:
             cursor.execute(consulta, visualizar())
+            messagebox.showinfo(title="Guardado", message="Guardado Exitosamente")
     except Exception as e:
         print("Ocurrió un error al insertar: ", e)
+        messagebox.showerror(title="Error", message="Ocurrió un error al guardar")
 
 
 def times():
     fechaC = datetime.today()  # Capruta date actual
     current_date = fechaC.strftime("%m/%d/%Y")
-    lblFecha.config(text=current_date)
+    lblFecha.config(text=current_date, font="Sans-serif")
 
 
 # VARIABLES
@@ -170,16 +177,16 @@ gray = 0
 # INTERFAZ
 pantalla = Tk()
 pantalla.title("Tiendas Cortitelas | People Counter")
-pantalla.geometry("1280x720")  # Dimensión de la ventana
+pantalla.geometry("880x580")  # Dimensión de la ventana
 
 # Fondo
 imagenF = PhotoImage(file="Fondo.png")
 background = Label(image=imagenF, text="Fondo")
 background.place(x=0, y=0, relwidth=1, relheight=1)
 
-texto1 = Label(pantalla, text="VIDEO EN TIEMPO REAL: ")
+texto1 = Label(pantalla, text="Video en tiempo real: ")
 texto1.config(font="Sans-serif")
-texto1.place(x=580, y=10)
+texto1.place(x=300, y=10)
 
 # Muestra fecha actual
 lblFecha = Label(pantalla)
@@ -190,20 +197,16 @@ times()  # Función captura fecha actual
 # Iniciar
 imgInicio = PhotoImage(file="Inicio.png")
 inicio = Button(pantalla, text="Iniciar", image=imgInicio, height="40", width="200", command=iniciar)
-inicio.place(x=1050, y=80)
-
-# Finalizar video
-imgFinalizar = PhotoImage(file="Finalizar.png")
-final = Button(pantalla, text="Finalizar", image=imgFinalizar, height="40", width="200", command=finalizar)
-final.place(x=1050, y=160)
+inicio.place(x=660, y=80)
 
 # Guardar
 imgGuardar = PhotoImage(file="guardar.png")
-btnGuardar = Button(pantalla, text="Guardar", image=imgGuardar, height="40", width="40", command=guardar)
-btnGuardar.place(x=1200, y=10)
+btnGuardar = Button(pantalla, text="Guardar", image=imgGuardar, height="40", width="200", command=guardar,
+                    state=tkinter.DISABLED)
+btnGuardar.place(x=660, y=140)
 
 # Video
 lblVideo = Label(pantalla)
-lblVideo.place(x=165, y=60)
+lblVideo.place(x=10, y=60)
 
 pantalla.mainloop()
