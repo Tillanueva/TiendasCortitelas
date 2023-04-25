@@ -6,6 +6,7 @@ from sort import *
 import tkinter
 from PIL import Image, ImageTk
 
+
 class PeopleCounter:
     # VARIABLES
 
@@ -30,7 +31,6 @@ class PeopleCounter:
 
     # variable de seguimiento de objetos
     trackers = Sort(max_age=20, min_hits=3, iou_threshold=0.3)
-
 
     def visualizar(self):
         global cap
