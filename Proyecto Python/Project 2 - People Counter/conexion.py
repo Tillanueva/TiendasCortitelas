@@ -1,5 +1,6 @@
 import pyodbc
-import timeit
+import pickle
+import os
 
 conn = pyodbc.connect('DRIVER={SQL Server};SERVER=DESKTOP-O6UFVI0;DATABASE=PROJECT_PC01;UID=sa;PWD=#projectPC')
 cursor = conn.cursor()
