@@ -5,18 +5,15 @@ from PIL import Image, ImageTk
 from sort import *
 from datetime import *
 from tkinter import messagebox
-from Visualizar import PeopleCounter
-
-InicioCam = PeopleCounter()
+from Visualizar import inicioCap
+from Visualizar import visualizar
+from Visualizar import mostrar
 
 
 def iniciar():
-    # Mostramos en el GUI
-    lblVideo.configure(image=InicioCam)
-    lblVideo.image = img
-    lblVideo.after(5, visualizar)
+    inicioCap.cap = cv2.VideoCapture(0)
     btnGuardar["state"] = tkinter.NORMAL
-    InicioCam.visualizar()
+    visualizar()
 
 
 def guardar():
@@ -68,8 +65,6 @@ btnGuardar = Button(pantalla, text="Guardar", image=imgGuardar, height="40", wid
                     state=tkinter.DISABLED)
 btnGuardar.place(x=660, y=140)
 
-# Video
-lblVideo = Label(pantalla)
-lblVideo.place(x=10, y=60)
+mostrar(pantalla)
 
 pantalla.mainloop()
