@@ -10,6 +10,7 @@ from datetime import *
 import pyodbc
 import timeit
 from tkinter import messagebox
+from Cython.Build import cythonize
 
 # CONEXION BASE DE DATOS
 conn = pyodbc.connect('DRIVER={SQL Server};SERVER=DESKTOP-O6UFVI0;DATABASE=PROJECT_PC01;UID=sa;PWD=#projectPC')
