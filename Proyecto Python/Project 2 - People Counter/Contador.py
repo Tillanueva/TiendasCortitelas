@@ -40,7 +40,6 @@ trackers = Sort(max_age=20, min_hits=3, iou_threshold=0.3)
 
 
 def visualizar():
-
     if cap is not None:
 
         ret, frame = cap.read()
@@ -141,7 +140,6 @@ def iniciar():
     cap.set(4, 520)
     btnGuardar["state"] = tkinter.NORMAL
     visualizar()
-
 
 
 def guardar():

@@ -31,7 +31,7 @@ classNames = ["person", "bicycle", "car", "motorbike", "aeroplane", "bus", "trai
 
 # Variables de conteo
 conteo = []
-salidas = []
+
 global count
 # Coordenadas límites verticales para poder contar a la persona
 limitsUp = [0, 300, 1280, 300]  # Entrada
