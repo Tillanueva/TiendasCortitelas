@@ -1,3 +1,4 @@
+from tkinter import ttk
 import tkinter
 import cv2
 import math
@@ -168,7 +169,7 @@ gray = 0
 # INTERFAZ
 pantalla = Tk()
 pantalla.title("Tiendas Cortitelas | People Counter")
-pantalla.geometry("880x580")  # Dimensión de la ventana
+pantalla.geometry("880x780")  # Dimensión de la ventana
 
 # Fondo
 imagenF = PhotoImage(file="Fondo.png")
@@ -189,6 +190,11 @@ times()  # Función captura fecha actual
 imgInicio = PhotoImage(file="Inicio.png")
 inicio = Button(pantalla, text="Iniciar", image=imgInicio, height="40", width="200", command=iniciar)
 inicio.place(x=660, y=80)
+
+self.tree = ttk.Treeview(height=10, columns=2)
+self.tree.grid(row=4, column=0, columnspan=2)
+self.tree.heading('#0', text='Name', anchor=CENTER)
+self.tree.heading('#1', text='Price', anchor=CENTER)
 
 
 # Video
