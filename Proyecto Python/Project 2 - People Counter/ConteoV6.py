@@ -1,5 +1,4 @@
 from tkinter import ttk
-import tkinter
 import cv2
 import math
 import cvzone
@@ -15,6 +14,9 @@ from conexion import conex
 
 # CONEXION BASE DE DATOS
 conn = conex.connec
+cursor = conn.cursor()
+consulta = "INSERT INTO conteo(fecha, entradas) VALUES (?, ?);"
+
 # inicializar el Modelo de YOLOY
 model = YOLO("../Yolo-Weights/yolov8n.pt")
 
@@ -45,8 +47,6 @@ def visualizar():
 
         fecha = times()
         # CONSULTA A LA BASE DE DATOS
-        cursor = conn.cursor()
-        consulta = "INSERT INTO conteo(fecha, entradas) VALUES (?, ?);"
 
         ret, frame = cap.read()
 
@@ -126,9 +126,11 @@ def visualizar():
             # Convertimos el video
             im = Image.fromarray(frame)
             img = ImageTk.PhotoImage(image=im)
+            lblVideo = Label(pantalla)
+            lblVideo.place(x=10, y=30)
 
             # Mostramos en el GUI
-            lblVideo.configure(image=img)
+            lblVideo.configure(image=img, width=870)
             lblVideo.image = img
             lblVideo.after(5, visualizar)
 
@@ -138,19 +140,22 @@ def visualizar():
             lblConteo = Label(pantalla, text="Ingreso de personas: " + count)
             lblConteo.config(font="Sans-serif")
             lblConteo.place(x=660, y=10)
-            return count
+
+            records = tree.get_children()
+            for element in records:
+                tree.delete(element)
+            try:
+                cursor.execute("exec ConteoDiario")
+                for row in cursor:
+                    tree.insert("", 0, text=row[0], values=(row[1], row[2]))
+
+            except:
+                pass
+
 
         else:
 
             cap.release()
-
-
-def iniciar():
-    global cap
-    cap = cv2.VideoCapture(0)
-    cap.set(3, 1500)
-    cap.set(4, 520)
-    visualizar()
 
 
 def times():
@@ -187,18 +192,25 @@ times()  # Función captura fecha actual
 
 # BOTONES
 # Iniciar
-imgInicio = PhotoImage(file="Inicio.png")
-inicio = Button(pantalla, text="Iniciar", image=imgInicio, height="40", width="200", command=iniciar)
-inicio.place(x=660, y=80)
 
-self.tree = ttk.Treeview(height=10, columns=2)
-self.tree.grid(row=4, column=0, columnspan=2)
-self.tree.heading('#0', text='Name', anchor=CENTER)
-self.tree.heading('#1', text='Price', anchor=CENTER)
 
+tree = ttk.Treeview(height=10, columns=2)
+tree.grid(row=4, column=0, columnspan=2)
+tree.heading('#0', text='Fecha', anchor=CENTER)
+tree.heading('#1', text='Total Personas', anchor=CENTER)
+tree.place(x=10, y=540)
+
+tree1 = ttk.Treeview(height=10, columns=2)
+tree1.grid(row=4, column=0, columnspan=2)
+tree1.heading('#0', text='Mes', anchor=CENTER)
+tree1.heading('#1', text='Total Personas', anchor=CENTER)
+tree1.place(x=450, y=540)
 
 # Video
-lblVideo = Label(pantalla)
-lblVideo.place(x=10, y=60)
+cap = cv2.VideoCapture(0)
+cap.set(1, 1700)
+cap.set(4, 520)
+
+visualizar()
 
 pantalla.mainloop()
