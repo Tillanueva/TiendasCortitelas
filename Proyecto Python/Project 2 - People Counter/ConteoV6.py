@@ -141,18 +141,6 @@ def visualizar():
             lblConteo.config(font="Sans-serif")
             lblConteo.place(x=660, y=10)
 
-            records = tree.get_children()
-            for element in records:
-                tree.delete(element)
-            try:
-                cursor.execute("exec ConteoDiario")
-                for row in cursor:
-                    tree.insert("", 0, text=row[0], values=(row[1], row[2]))
-
-            except:
-                pass
-
-
         else:
 
             cap.release()
@@ -163,6 +151,24 @@ def times():
     current_date = fechaC.strftime("%Y-%m-%d")
     lblFecha.config(text=current_date, font="Sans-serif")
     return current_date
+
+
+def mostrar():
+    cursor.execute("exec ConteoDiario")
+    records = cursor.fetchall()
+
+    global count
+    count = 0
+
+    for record in records:
+        if count % 2 == 0:
+            tree.insert(parent='', index='end', iid=count, text='', values=(record[0], record[1]), tags=('evenrow',))
+        else:
+            tree.insert(parent='', index='end', iid=count, text='', values=(record[0], record[1]), tags=('oddrow',))
+
+    conn.commit()
+
+    conn.close()
 
 
 # VARIABLES
@@ -212,5 +218,6 @@ cap.set(1, 1700)
 cap.set(4, 520)
 
 visualizar()
+mostrar()
 
 pantalla.mainloop()
