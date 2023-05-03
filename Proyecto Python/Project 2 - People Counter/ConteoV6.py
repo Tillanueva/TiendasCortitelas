@@ -157,7 +157,7 @@ def times():
 
 
 def mostrarDia():
-    cursor.execute("exec ConteoDiario")
+    cursor.execute(" exec ConeoDiarioDesc")
     records = cursor.fetchall()
 
     global count
@@ -174,7 +174,7 @@ def mostrarDia():
 
 
 def mostrarMes():
-    cursor.execute("exec ConteoMes")
+    cursor.execute("exec ConteoMesDesc")
     records = cursor.fetchall()
 
     global count
@@ -199,7 +199,7 @@ gray = 0
 # INTERFAZ
 pantalla = Tk()
 pantalla.title("Tiendas Cortitelas | People Counter")
-pantalla.geometry("880x760")  # Dimensión de la ventana
+pantalla.geometry("860x690")  # Dimensión de la ventana
 
 # Fondo
 imagenF = PhotoImage(file="Fondo.png")
