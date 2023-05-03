@@ -119,15 +119,18 @@ def visualizar():
                             with cursor:
                                 cursor.execute(consulta, (fecha, 1))
                                 print("Almacenado")
+                                mostrarDia()
+                                mostrarMes()
                         except Exception as e:
                             print("Ocurrió un error al insertar: ", e)
+
                         cv2.line(frame, (limitsUp[3], limitsUp[2]), (limitsUp[1], limitsUp[0]), (0, 255, 0), 5)
 
             # Convertimos el video
             im = Image.fromarray(frame)
             img = ImageTk.PhotoImage(image=im)
             lblVideo = Label(pantalla)
-            lblVideo.place(x=10, y=30)
+            lblVideo.place(x=10, y=35)
 
             # Mostramos en el GUI
             lblVideo.configure(image=img, width=870)
@@ -153,22 +156,38 @@ def times():
     return current_date
 
 
-def mostrar():
+def mostrarDia():
     cursor.execute("exec ConteoDiario")
     records = cursor.fetchall()
 
     global count
     count = 0
 
+    for record in tree.get_children():
+        tree.delete(record)
+
     for record in records:
-        if count % 2 == 0:
-            tree.insert(parent='', index='end', iid=count, text='', values=(record[0], record[1]), tags=('evenrow',))
+        if count == 0:
+            tree.insert('', 'end', values=(record[0], record[1]), tags=('evenrow',))
         else:
-            tree.insert(parent='', index='end', iid=count, text='', values=(record[0], record[1]), tags=('oddrow',))
+            tree.insert('', 'end', values=(record[0], record[1]), tags=('oddrow',))
 
-    conn.commit()
 
-    conn.close()
+def mostrarMes():
+    cursor.execute("exec ConteoMes")
+    records = cursor.fetchall()
+
+    global count
+    count = 0
+
+    for record in tree1.get_children():
+        tree1.delete(record)
+
+    for record in records:
+        if count == 0:
+            tree1.insert('', 'end', values=(record[0], record[1]), tags=('evenrow',))
+        else:
+            tree1.insert('', 'end', values=(record[0], record[1]), tags=('oddrow',))
 
 
 # VARIABLES
@@ -180,7 +199,7 @@ gray = 0
 # INTERFAZ
 pantalla = Tk()
 pantalla.title("Tiendas Cortitelas | People Counter")
-pantalla.geometry("880x780")  # Dimensión de la ventana
+pantalla.geometry("880x760")  # Dimensión de la ventana
 
 # Fondo
 imagenF = PhotoImage(file="Fondo.png")
@@ -189,35 +208,37 @@ background.place(x=0, y=0, relwidth=1, relheight=1)
 
 texto1 = Label(pantalla, text="Video en tiempo real: ")
 texto1.config(font="Sans-serif")
-texto1.place(x=300, y=10)
+texto1.place(x=350, y=10)
 
 # Muestra fecha actual
 lblFecha = Label(pantalla)
 lblFecha.place(x=10, y=10)
 times()  # Función captura fecha actual
 
-# BOTONES
-# Iniciar
-
-
-tree = ttk.Treeview(height=10, columns=2)
+# Muestra la tabla de tráfico por día
+tree = ttk.Treeview(pantalla, columns=('0', '1'), show="headings", height=10, )
 tree.grid(row=4, column=0, columnspan=2)
-tree.heading('#0', text='Fecha', anchor=CENTER)
-tree.heading('#1', text='Total Personas', anchor=CENTER)
+tree.column('0', anchor=CENTER)
+tree.column('1', anchor=CENTER)
+tree.heading('0', text='Fecha', anchor=CENTER)
+tree.heading('1', text='Total Personas', anchor=CENTER)
 tree.place(x=10, y=540)
 
-tree1 = ttk.Treeview(height=10, columns=2)
+# Muestra la tabla de tráfico por mes
+tree1 = ttk.Treeview(pantalla, height=10, columns=('0', '1'), show="headings")
 tree1.grid(row=4, column=0, columnspan=2)
-tree1.heading('#0', text='Mes', anchor=CENTER)
-tree1.heading('#1', text='Total Personas', anchor=CENTER)
+tree1.column('0', anchor=CENTER)
+tree1.column('1', anchor=CENTER)
+tree1.heading('0', text='Mes', anchor=CENTER)
+tree1.heading('1', text='Total Personas', anchor=CENTER)
 tree1.place(x=450, y=540)
 
 # Video
+
 cap = cv2.VideoCapture(0)
 cap.set(1, 1700)
 cap.set(4, 520)
 
 visualizar()
-mostrar()
 
 pantalla.mainloop()
