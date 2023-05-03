@@ -19,18 +19,28 @@ fechaConteo varchar(50),
 sumConteo int
 );
 
+CREATE PROCEDURE ConeoDiarioDesc
+as
 SELECT fecha, SUM(entradas) AS 'Total Personas'
 FROM conteo
 WHERE fecha = fecha
 group by fecha
+order by fecha DESC
+go
 
+CREATE PROCEDURE ConteoMesDesc
+AS
 SELECT DATENAME(MONTH, DATEADD(MONTH,MONTH(fecha)- 1, '1900-01-01')) Mes, SUM(entradas) AS 'Total Personas'
 FROM conteo
 WHERE MONTH(fecha) =  MONTH(fecha)
 group by MONTH(fecha)
-
+order by MONTH(fecha) DESC
+go
 
 SELECT YEAR(fecha) Año, SUM(entradas) As 'Total Personas'
 FROM conteo
 WHERE YEAR(fecha) = YEAR(fecha)
 group by YEAR(fecha)
+ 
+ exec ConeoDiarioDesc
+ exec ConteoMesDesc
