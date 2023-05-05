@@ -6,7 +6,7 @@ from conexion import conex
 conn = conex.connec
 cursor = conn.cursor()
 
-cursor.execute(" exec ConeoDiarioDesc")
+cursor.execute(" exec TraficoDiario5")
 fecha = [i for i in cursor.fetchall()]
 traficoDia = dict((i[0],i[1])for i in fecha)
 

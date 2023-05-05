@@ -8,7 +8,7 @@ plt.rcParams["axes.prop_cycle"] = plt.cycler(
 
 # Chart 1: Bar chart of sales data
 fig1, ax1 = plt.subplots()
-ax1.bar(traficoDia.keys(), traficoDia.values())
+ax1.plot(traficoDia.keys(), traficoDia.values())
 ax1.set_title("Tráfico por Día")
 ax1.set_xlabel("Fecha")
 ax1.set_ylabel("Tráfico")
@@ -24,10 +24,10 @@ ax2.set_ylabel("Tráfico")
 
 # Chart 2: Horizontal bar chart of inventory data
 fig3, ax3 = plt.subplots()
-ax3.bar(traficoAnual.keys(), traficoAnual.values())
+ax3.pie(traficoAnual.keys(), traficoAnual.values())
 ax3.set_title("Tráfico Anual")
-ax3.set_xlabel("Año")
-ax3.set_ylabel("Tráfico")
+"""ax3.set_xlabel("Año")
+ax3.set_ylabel("Tráfico")"""
 # plt.show()
 
 
