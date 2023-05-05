@@ -23,11 +23,10 @@ ax2.set_ylabel("Tráfico")
 # plt.show()
 
 # Chart 2: Horizontal bar chart of inventory data
+# Chart 3: Pie chart of product data
 fig3, ax3 = plt.subplots()
-ax3.pie(traficoAnual.keys(), traficoAnual.values())
-ax3.set_title("Tráfico Anual")
-"""ax3.set_xlabel("Año")
-ax3.set_ylabel("Tráfico")"""
+ax3.pie(traficoAnual.values(), labels=traficoAnual.keys(), autopct='%1.1f%%')
+ax3.set_title("Product \nBreakdown")
 # plt.show()
 
 
@@ -59,6 +58,9 @@ canvas2.get_tk_widget().pack(side="left", fill="both", expand=True)
 canvas3 = FigureCanvasTkAgg(fig3, upper_frame)
 canvas3.draw()
 canvas3.get_tk_widget().pack(side="left", fill="both", expand=True)
+
+lower_frame = tk.Frame(charts_frame)
+lower_frame.pack(fill="both", expand=True)
 
 
 root.mainloop()
