@@ -19,9 +19,9 @@ fechaConteo varchar(50),
 sumConteo int
 );
 
-CREATE PROCEDURE ConeoDiarioDesc
+CREATE PROCEDURE Día
 as
-SELECT fecha, SUM(entradas) AS 'Total Personas'
+SELECT fecha
 FROM conteo
 WHERE fecha = fecha
 group by fecha
@@ -42,5 +42,6 @@ FROM conteo
 WHERE YEAR(fecha) = YEAR(fecha)
 group by YEAR(fecha)
  
- exec ConeoDiarioDesc
+ exec Día
  exec ConteoMesDesc
+
